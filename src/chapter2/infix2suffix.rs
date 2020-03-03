@@ -4,7 +4,6 @@ pub struct Parser {
 }
 
 impl Parser {
-
     /// Parser構造体を生成して返す
     ///
     /// # Params
@@ -14,6 +13,14 @@ impl Parser {
     /// Parser
     pub fn new(expr: String) -> Parser {
         Parser{ expr, lookidx: 0 }
+    }
+
+    /// エラーを吐いてpanicを投げる
+    ///
+    /// # Params
+    /// - msg(&str) : メッセージ
+    fn error(msg: &str) {
+        panic!("[ERROR] {}", msg);
     }
 }
 
