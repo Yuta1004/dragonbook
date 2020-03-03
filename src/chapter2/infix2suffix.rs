@@ -47,3 +47,23 @@ impl Parser {
 fn new_test() {
     let _ = Parser::new("1+1".to_string());
 }
+
+#[test]
+fn expect_test() {
+    let parser = Parser::new("abcdefg".to_string());
+    assert!(parser.expect('a'));
+    assert!(!parser.expect('A'));
+}
+
+#[test]
+fn lookahead_test() {
+    let parser = Parser::new("abcdefg".to_string());
+    assert_eq!('a', parser.get_lookahead());
+}
+
+#[test]
+#[should_panic]
+fn error_test() {
+    let parser = Parser::new("abcdefg".to_string());
+    parser.error("PANIC");
+}
