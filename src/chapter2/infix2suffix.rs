@@ -25,6 +25,15 @@ impl Parser {
         lookahead == c
     }
 
+    /// 現在対象となっている文字を返す
+    /// 存在しない場合はpanic
+    fn get_lookahead(&self) -> char {
+        match self.expr.chars().nth(self.lookidx as usize) {
+            Some(c)  => c,
+            None => { Self::error(self, ""); 'x' }
+        }
+    }
+
     /// エラーを吐いてpanicを投げる
     ///
     /// # Params
