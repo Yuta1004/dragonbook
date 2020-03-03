@@ -1,10 +1,11 @@
 pub struct Parser {
-    expr: String
+    expr: String,
+    lookidx: i32,
 }
 
 impl Parser {
     pub fn new(expr: String) -> Parser {
-        Parser{ expr }
+        Parser{ expr, lookidx: 0 }
     }
 }
 
