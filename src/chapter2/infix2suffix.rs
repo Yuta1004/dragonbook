@@ -4,6 +4,14 @@ pub struct Parser {
 }
 
 impl Parser {
+
+    /// Parser構造体を生成して返す
+    ///
+    /// # Params
+    /// - expr(String) : 中置式
+    ///
+    /// # Return
+    /// Parser
     pub fn new(expr: String) -> Parser {
         Parser{ expr, lookidx: 0 }
     }
