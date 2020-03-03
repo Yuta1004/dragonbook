@@ -20,7 +20,7 @@ impl Parser {
     fn expect(&self, c: char) -> bool {
         let lookahead = match(self.expr.chars().nth(self.lookidx as usize)) {
             Some(c)  => c,
-            None => { Self::error(""); 'x' }
+            None => { Self::error(self, ""); 'x' }
         };
         lookahead == c
     }
@@ -29,8 +29,8 @@ impl Parser {
     ///
     /// # Params
     /// - msg(&str) : メッセージ
-    fn error(msg: &str) {
-        panic!("[ERROR] {}", msg);
+    fn error(&self, msg: &str) {
+        panic!("[ERROR] {} : at {}", msg, self.lookidx);
     }
 }
 
