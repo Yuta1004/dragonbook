@@ -15,6 +15,18 @@ impl Parser {
         Parser{ expr, lookidx: 0 }
     }
 
+
+    /// 現在読んでいる文字が数字ならその値を出力する
+    fn term(&mut self) {
+        let lookahead = Self::get_lookahead(self);
+        if '0' <= lookahead && lookahead <= '9' {
+            self.lookidx += 1;
+            print!("{}", lookahead);
+        } else {
+            Self::error(self, "expected \"term\"");
+        }
+    }
+
     /// 現在読んでいる文字との比較を行ってその結果を返す
     /// 文字が存在しない場合はpanic
     fn expect(&mut self, c: char) -> bool {
@@ -54,6 +66,12 @@ fn new_test() {
 }
 
 #[test]
+fn term_test() {
+    let mut parser = Parser::new("2+2".to_string());
+    parser.term();
+}
+
+#[test]
 fn expect_test() {
     let mut parser = Parser::new("abcdefg".to_string());
     assert!(parser.expect('a'));
@@ -72,3 +90,4 @@ fn error_test() {
     let parser = Parser::new("abcdefg".to_string());
     parser.error("PANIC");
 }
+
