@@ -47,13 +47,12 @@ impl Parser {
     }
 
     /// 現在読んでいる文字との比較を行ってその結果を返す
-    /// 文字が存在しない場合はpanic
     fn expect(&mut self, c: char) -> bool {
         let lookahead = match self.expr.chars().nth(self.lookidx as usize) {
             Some(c)  => c,
-            None => { Self::error(self, ""); 'x' }
+            None => '_'
         };
-        if lookahead == c {
+        if lookahead != '_' && lookahead == c {
             self.lookidx += 1;
             true
         } else {
