@@ -15,6 +15,25 @@ impl Parser {
         Parser{ expr, lookidx: 0 }
     }
 
+    /// expr -> term rest
+    /// rest -> + term {print!("+")} rest
+    ///       | - term {print!("-")} rest
+    ///       | ε
+    pub fn parse(&mut self) {
+        Self::term(self);
+        loop {
+            if Self::expect(self, '+') {
+                Self::term(self);
+                print!("+");
+                continue
+            } else if Self::expect(self, '-') {
+                Self::term(self);
+                print!("-");
+                continue
+            }
+            break
+        }
+    }
 
     /// 現在読んでいる文字が数字ならその値を出力する
     fn term(&mut self) {
@@ -63,6 +82,12 @@ impl Parser {
 #[test]
 fn new_test() {
     let _ = Parser::new("1+1".to_string());
+}
+
+#[test]
+fn parse_test() {
+    let mut parser = Parser::new("9+5-2".to_string());
+    parser.parse();
 }
 
 #[test]
