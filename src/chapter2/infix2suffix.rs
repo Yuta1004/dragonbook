@@ -18,7 +18,7 @@ impl Parser {
     /// 現在読んでいる文字との比較を行ってその結果を返す
     /// 文字が存在しない場合はpanic
     fn expect(&self, c: char) -> bool {
-        let lookahead = match(self.expr.chars().nth(self.lookidx as usize)) {
+        let lookahead = match self.expr.chars().nth(self.lookidx as usize) {
             Some(c)  => c,
             None => { Self::error(self, ""); 'x' }
         };
