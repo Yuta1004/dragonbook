@@ -17,12 +17,17 @@ impl Parser {
 
     /// 現在読んでいる文字との比較を行ってその結果を返す
     /// 文字が存在しない場合はpanic
-    fn expect(&self, c: char) -> bool {
+    fn expect(&mut self, c: char) -> bool {
         let lookahead = match self.expr.chars().nth(self.lookidx as usize) {
             Some(c)  => c,
             None => { Self::error(self, ""); 'x' }
         };
-        lookahead == c
+        if lookahead == c {
+            self.lookidx += 1;
+            true
+        } else {
+            false
+        }
     }
 
     /// 現在対象となっている文字を返す
@@ -50,7 +55,7 @@ fn new_test() {
 
 #[test]
 fn expect_test() {
-    let parser = Parser::new("abcdefg".to_string());
+    let mut parser = Parser::new("abcdefg".to_string());
     assert!(parser.expect('a'));
     assert!(!parser.expect('A'));
 }
