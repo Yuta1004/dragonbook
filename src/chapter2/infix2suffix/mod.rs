@@ -76,6 +76,11 @@ impl Parser {
     /// # Params
     /// - msg(&str) : メッセージ
     fn error(&self, msg: &str) {
-        panic!("[ERROR] {} : at {}", msg, self.lookidx);
+        let space_len = 11+msg.len()+self.lookidx as usize;
+        let mut space = String::with_capacity(space_len);
+        for _ in 0..space_len {
+            space.push(' ');
+        }
+        panic!("\n[ERROR] {} : {}\n{}^at here\n", msg, self.expr, space);
     }
 }
