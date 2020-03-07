@@ -1,3 +1,5 @@
+use super::super::infix2suffix::Parser;
+
 #[test]
 fn new_test() {
     let _ = Parser::new("1+1".to_string());
