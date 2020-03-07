@@ -3,11 +3,11 @@ mod tests;
 
 // Token
 pub struct Token {
-    tag: i32,
+    tag: Tag,
 }
 
 impl Token {
-    pub fn new(tag: i32) -> Token {
+    pub fn new(tag: Tag) -> Token {
         Token { tag }
     }
 }

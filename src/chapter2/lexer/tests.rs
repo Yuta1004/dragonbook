@@ -1,9 +1,9 @@
 #[cfg(test)]
 mod token {
-    use super::super::super::lexer::Token;
+    use super::super::super::lexer::{Token, Tag};
 
     #[test]
     fn new_test() {
-        let _ = Token::new(1);
+        let _ = Token::new(Tag.Num);
     }
 }
