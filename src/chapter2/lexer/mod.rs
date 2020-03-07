@@ -1,16 +1,4 @@
-#[cfg(test)]
-mod tests;
-
-// Token
-pub struct Token {
-    tag: Tag,
-}
-
-impl Token {
-    pub fn new(tag: Tag) -> Token {
-        Token { tag }
-    }
-}
+mod token;
 
 // Tag
 pub enum Tag {
