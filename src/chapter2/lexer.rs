@@ -9,7 +9,7 @@ pub struct Lexer<'a> {
     line: i32,
     nowon: i32,
     program: Vec<char>,
-    matchTable: HashMap<String, &'a Token>
+    match_table: HashMap<String, &'a Token>
 }
 
 impl<'a> Lexer<'a> {
@@ -18,7 +18,7 @@ impl<'a> Lexer<'a> {
             line: 0,
             nowon: 0,
             program: program.chars().collect::<Vec<char>>(),
-            matchTable: HashMap::new()
+            match_table: HashMap::new()
         }
     }
 
@@ -46,7 +46,7 @@ impl<'a> Lexer<'a> {
     }
 
     fn reserve(&mut self, tag: String, token: &'a Token) {
-        self.matchTable.insert(tag, token);
+        self.match_table.insert(tag, token);
     }
 }
 
