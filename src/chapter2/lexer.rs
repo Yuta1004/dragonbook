@@ -22,6 +22,20 @@ impl<'a> Lexer<'a> {
         }
     }
 
+    fn consume_num(&mut self) -> i32 {
+        let mut num = 0;
+        for c in &self.program[(self.nowon as usize)..] {
+            match c {
+                '0'..='9' => {
+                    num = num*10 + (*c as i32 - '0' as i32);
+                    self.nowon += 1;
+                },
+                _ => break
+            }
+        }
+        num
+    }
+
     fn skip_space(&mut self) {
         for c in &self.program[(self.nowon as usize)..] {
             match c {
