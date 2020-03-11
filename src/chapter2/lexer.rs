@@ -22,6 +22,15 @@ impl<'a> Lexer<'a> {
         }
     }
 
+    fn skip_space(&mut self) {
+        for c in &self.program[(self.nowon as usize)..] {
+            match c {
+                ' ' => self.nowon += 1,
+                _ => break
+            }
+        }
+    }
+
     fn reserve(&mut self, tag: String, token: &'a Token) {
         self.matchTable.insert(tag, token);
     }
