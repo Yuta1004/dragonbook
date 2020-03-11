@@ -58,7 +58,7 @@ fn consume_word(target_vec: &Vec<char>) {
     let mut size = 0;
     for c in target_vec {
         match c {
-            'a'..='z' | 'A'..='Z' => word.push(*c),
+            'a'..='z' | 'A'..='Z' | '_' => word.push(*c),
             _ => break
         }
     }
