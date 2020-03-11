@@ -1,5 +1,4 @@
-use super::super::token::Token;
-use super::super::super::lexer::Tag;
+use super::super::token::{Tag, Token};
 
 #[test]
 fn new_test() {

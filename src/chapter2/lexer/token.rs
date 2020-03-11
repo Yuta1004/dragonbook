@@ -1,7 +1,16 @@
 #[cfg(test)]
 mod tests;
 
-use super::super::lexer::Tag;
+pub enum Tag {
+    Plus,
+    Sub,
+    Mul,
+    Div,
+    Num,
+    Id,
+    True,
+    False
+}
 
 pub enum Token {
     Num { tag: Tag, num: i32 },
