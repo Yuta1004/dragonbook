@@ -4,7 +4,6 @@ use std::collections::HashMap;
 
 use token::Token;
 
-// scanner
 pub struct Lexer<'a> {
     line: i32,
     nowon: i32,
