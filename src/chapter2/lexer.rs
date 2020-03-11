@@ -22,32 +22,36 @@ impl<'a> Lexer<'a> {
         }
     }
 
-    fn consume_num(&mut self) -> i32 {
-        let mut num = 0;
-        for c in &self.program[(self.nowon as usize)..] {
-            match c {
-                '0'..='9' => {
-                    num = num*10 + (*c as i32 - '0' as i32);
-                    self.nowon += 1;
-                },
-                _ => break
-            }
-        }
-        num
-    }
-
-    fn skip_space(&mut self) {
-        for c in &self.program[(self.nowon as usize)..] {
-            match c {
-                ' ' => self.nowon += 1,
-                _ => break
-            }
-        }
-    }
-
     fn reserve(&mut self, tag: String, token: &'a Token) {
         self.match_table.insert(tag, token);
     }
+}
+
+
+fn skip_space(target_vec: &Vec<char>) -> i32 {
+    let mut size = 0;
+    for c in target_vec {
+        match c {
+            ' ' => size += 1,
+            _ => break
+        }
+    }
+    size
+}
+
+fn consume_num(target_vec: &Vec<char>) -> (i32, i32) {
+    let mut num = 0;
+    let mut size = 0;
+    for c in target_vec {
+        match c {
+            '0'..='9' => {
+                num = num*10 + (*c as i32 - '0' as i32);
+                size += 1;
+            },
+            _ => break
+        }
+    }
+    (num, size)
 }
 
 #[test]
