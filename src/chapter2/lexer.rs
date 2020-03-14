@@ -4,15 +4,15 @@ use std::collections::HashMap;
 
 use token::Token;
 
-pub struct Lexer<'a> {
+pub struct Lexer {
     line: i32,
     nowon: i32,
     program: Vec<char>,
-    match_table: HashMap<String, &'a Token>
+    match_table: HashMap<String, Token>
 }
 
-impl<'a> Lexer<'a> {
-    pub fn new(program: String) -> Lexer<'a> {
+impl Lexer {
+    pub fn new(program: String) -> Lexer {
         Lexer {
             line: 0,
             nowon: 0,
@@ -21,7 +21,7 @@ impl<'a> Lexer<'a> {
         }
     }
 
-    fn reserve(&mut self, tag: String, token: &'a Token) {
+    fn reserve(&mut self, tag: String, token: Token) {
         self.match_table.insert(tag, token);
     }
 }
