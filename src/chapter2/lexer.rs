@@ -2,7 +2,7 @@ mod token;
 
 use std::collections::HashMap;
 
-use token::Token;
+use token::{Tag, Token};
 
 pub struct Lexer {
     line: i32,
@@ -13,12 +13,15 @@ pub struct Lexer {
 
 impl Lexer {
     pub fn new(program: String) -> Lexer {
-        Lexer {
+        let mut lexer = Lexer {
             line: 0,
             nowon: 0,
             program: program.chars().collect::<Vec<char>>(),
             match_table: HashMap::new()
-        }
+        };
+        lexer.reserve(Token::new_word(Tag::True, "true".to_string()));
+        lexer.reserve(Token::new_word(Tag::False, "false".to_string()));
+        lexer
     }
 
     fn reserve(&mut self, token: Token) {
@@ -30,7 +33,6 @@ impl Lexer {
         };
     }
 }
-
 
 fn skip_space(target_vec: &Vec<char>) -> i32 {
     let mut size = 0;
