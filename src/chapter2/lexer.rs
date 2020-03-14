@@ -60,15 +60,19 @@ fn consume_num(target_vec: &[char]) -> (i32, i32) {
     (num, size)
 }
 
-fn consume_word(target_vec: &[char]) {
+fn consume_word(target_vec: &[char]) -> (String, i32) {
     let mut word = String::new();
     let mut size = 0;
     for c in target_vec {
         match c {
-            'a'..='z' | 'A'..='Z' | '_' => word.push(*c),
+            'a'..='z' | 'A'..='Z' | '_' => {
+                word.push(*c);
+                size += 1;
+            },
             _ => break
         }
     }
+    (word, size)
 }
 
 #[test]
