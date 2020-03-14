@@ -1,6 +1,9 @@
 #[cfg(test)]
 mod tests;
 
+use std::clone::Clone;
+
+#[derive(Clone)]
 pub enum Tag {
     Plus,
     Sub,
@@ -12,6 +15,7 @@ pub enum Tag {
     False
 }
 
+#[derive(Clone)]
 pub enum Token {
     Num { tag: Tag, num: i32 },
     Word { tag: Tag, lexeme: String }
