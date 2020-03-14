@@ -34,7 +34,7 @@ impl Lexer {
     }
 }
 
-fn skip_space(target_vec: &Vec<char>) -> i32 {
+fn skip_space(target_vec: &[char]) -> i32 {
     let mut size = 0;
     for c in target_vec {
         match c {
@@ -45,7 +45,7 @@ fn skip_space(target_vec: &Vec<char>) -> i32 {
     size
 }
 
-fn consume_num(target_vec: &Vec<char>) -> (i32, i32) {
+fn consume_num(target_vec: &[char]) -> (i32, i32) {
     let mut num = 0;
     let mut size = 0;
     for c in target_vec {
@@ -60,7 +60,7 @@ fn consume_num(target_vec: &Vec<char>) -> (i32, i32) {
     (num, size)
 }
 
-fn consume_word(target_vec: &Vec<char>) {
+fn consume_word(target_vec: &[char]) {
     let mut word = String::new();
     let mut size = 0;
     for c in target_vec {
