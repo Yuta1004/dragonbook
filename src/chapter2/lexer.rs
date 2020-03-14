@@ -38,7 +38,14 @@ impl Lexer {
             'a'..='z' | 'A'..='Z' | '_' => {
                 let (word, size) = consume_word(target);
                 self.nowon += size;
-                Token::new_word(Tag::Id, word)
+                match self.match_table.get(&word) {
+                    Some(t) => t.clone(),
+                    None => {
+                        let nt = Token::new_word(Tag::Id, word);
+                        Self::reserve(self, nt.clone());
+                        nt
+                    }
+                }
             },
             c => panic!("i can't translate this word => {}", c)
         }
