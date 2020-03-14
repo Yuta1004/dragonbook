@@ -6,7 +6,7 @@ use token::{Tag, Token};
 
 pub struct Lexer {
     line: i32,
-    nowon: i32,
+    nowon: usize,
     program: Vec<char>,
     match_table: HashMap<String, Token>
 }
@@ -25,21 +25,21 @@ impl Lexer {
     }
 
     pub fn scan(&mut self) -> Token {
-        let space_num = skip_space(&self.program[self.nowon as usize..]);
+        let space_num = skip_space(&self.program[self.nowon..]);
         self.nowon += space_num;
 
-        match self.program[self.nowon as usize] {
+        match self.program[self.nowon] {
             '0'..='9' => {
-                let (num, size) = consume_num(&self.program[self.nowon as usize..]);
+                let (num, size) = consume_num(&self.program[self.nowon..]);
                 self.nowon += size;
                 Token::new_num(num)
             },
             'a'..='z' | 'A'..='Z' | '_' => {
-                let (word, size) = consume_word(&self.program[self.nowon as usize..]);
+                let (word, size) = consume_word(&self.program[self.nowon..]);
                 self.nowon += size;
                 Token::new_word(Tag::Id, word)
             },
-            _ => panic!("i can't translate this word => {}", self.program[self.nowon as usize])
+            _ => panic!("i can't translate this word => {}", self.program[self.nowon])
         }
     }
 
@@ -53,7 +53,7 @@ impl Lexer {
     }
 }
 
-fn skip_space(target_vec: &[char]) -> i32 {
+fn skip_space(target_vec: &[char]) -> usize {
     let mut size = 0;
     for c in target_vec {
         match c {
@@ -64,7 +64,7 @@ fn skip_space(target_vec: &[char]) -> i32 {
     size
 }
 
-fn consume_num(target_vec: &[char]) -> (i32, i32) {
+fn consume_num(target_vec: &[char]) -> (i32, usize) {
     let mut num = 0;
     let mut size = 0;
     for c in target_vec {
@@ -79,7 +79,7 @@ fn consume_num(target_vec: &[char]) -> (i32, i32) {
     (num, size)
 }
 
-fn consume_word(target_vec: &[char]) -> (String, i32) {
+fn consume_word(target_vec: &[char]) -> (String, usize) {
     let mut word = String::new();
     let mut size = 0;
     for c in target_vec {
