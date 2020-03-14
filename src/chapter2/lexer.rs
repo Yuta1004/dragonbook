@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use token::{Tag, Token};
 
 pub struct Lexer {
-    line: i32,
+    line: usize,
     nowon: usize,
     program: Vec<char>,
     match_table: HashMap<String, Token>
@@ -25,8 +25,9 @@ impl Lexer {
     }
 
     pub fn scan(&mut self) -> Token {
-        let space_num = skip_space(&self.program[self.nowon..]);
-        self.nowon += space_num;
+        let (size, line) = skip_space(&self.program[self.nowon..]);
+        self.nowon += size;
+        self.line += line;
 
         let target = &self.program[self.nowon..];
         match target[0] {
@@ -47,7 +48,7 @@ impl Lexer {
                     }
                 }
             },
-            c => panic!("i can't translate this word => {}", c)
+            c => panic!("[FAILED] error at line:{} => {}", self.line, c)
         }
     }
 
@@ -61,15 +62,17 @@ impl Lexer {
     }
 }
 
-fn skip_space(target_vec: &[char]) -> usize {
+fn skip_space(target_vec: &[char]) -> (usize, usize) {
     let mut size = 0;
+    let mut line = 0;
     for c in target_vec {
         match c {
-            ' ' => size += 1,
+            ' ' | '\t' => size += 1,
+            '\n' => { line += 1; size += 1 },
             _ => break
         }
     }
-    size
+    (size, line)
 }
 
 fn consume_num(target_vec: &[char]) -> (i32, usize) {
