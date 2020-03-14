@@ -21,8 +21,13 @@ impl Lexer {
         }
     }
 
-    fn reserve(&mut self, tag: String, token: Token) {
-        self.match_table.insert(tag, token);
+    fn reserve(&mut self, token: Token) {
+        match token {
+            Token::Word { tag, lexeme } => {
+                self.match_table.insert(lexeme.clone(), Token::new_word(tag, lexeme));
+            },
+            _ => {}
+        };
     }
 }
 
