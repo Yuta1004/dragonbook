@@ -28,18 +28,19 @@ impl Lexer {
         let space_num = skip_space(&self.program[self.nowon..]);
         self.nowon += space_num;
 
-        match self.program[self.nowon] {
+        let target = &self.program[self.nowon..];
+        match target[0] {
             '0'..='9' => {
-                let (num, size) = consume_num(&self.program[self.nowon..]);
+                let (num, size) = consume_num(target);
                 self.nowon += size;
                 Token::new_num(num)
             },
             'a'..='z' | 'A'..='Z' | '_' => {
-                let (word, size) = consume_word(&self.program[self.nowon..]);
+                let (word, size) = consume_word(target);
                 self.nowon += size;
                 Token::new_word(Tag::Id, word)
             },
-            _ => panic!("i can't translate this word => {}", self.program[self.nowon])
+            c => panic!("i can't translate this word => {}", c)
         }
     }
 
