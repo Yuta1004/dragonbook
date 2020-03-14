@@ -24,6 +24,25 @@ impl Lexer {
         lexer
     }
 
+    pub fn scan(&mut self) -> Token {
+        let space_num = skip_space(&self.program[self.nowon as usize..]);
+        self.nowon += space_num;
+
+        match self.program[self.nowon as usize] {
+            '0'..='9' => {
+                let (num, size) = consume_num(&self.program[self.nowon as usize..]);
+                self.nowon += size;
+                Token::new_num(num)
+            },
+            'a'..='z' | 'A'..='Z' | '_' => {
+                let (word, size) = consume_word(&self.program[self.nowon as usize..]);
+                self.nowon += size;
+                Token::new_word(Tag::Id, word)
+            },
+            _ => panic!("i can't translate this word => {}", self.program[self.nowon as usize])
+        }
+    }
+
     fn reserve(&mut self, token: Token) {
         match token.clone() {
             Token::Word { tag: _, lexeme } => {
@@ -77,5 +96,9 @@ fn consume_word(target_vec: &[char]) -> (String, i32) {
 
 #[test]
 fn lexer_easy_test() {
-    let _ = Lexer::new("gochiusa.com".to_string());
+    let mut lexer = Lexer::new("gochiusa.com".to_string());
+    match lexer.scan() {
+        Token::Num { tag: _, num } => println!("Num: {}", num),
+        Token::Word { tag: _, lexeme } => println!("Word: {}", lexeme),
+    }
 }
