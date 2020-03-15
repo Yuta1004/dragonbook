@@ -9,7 +9,6 @@ pub enum Tag {
     Sub,
     Mul,
     Div,
-    Num,
     Id,
     True,
     False
@@ -17,13 +16,13 @@ pub enum Tag {
 
 #[derive(Clone)]
 pub enum Token {
-    NumI32 { tag: Tag, num: i32 },
+    NumI32 { num: i32 },
     Word { tag: Tag, lexeme: String }
 }
 
 impl Token {
     pub fn new_numi32(num: i32) -> Token {
-        Token::NumI32 { tag: Tag::Num, num }
+        Token::NumI32 { num }
     }
 
     pub fn new_word(tag: Tag, lexeme: String) -> Token {
