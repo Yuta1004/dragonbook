@@ -21,6 +21,12 @@ impl Lexer {
         };
         lexer.reserve(Token::new_word(Tag::True, "true".to_string()));
         lexer.reserve(Token::new_word(Tag::False, "false".to_string()));
+        lexer.reserve(Token::new_word(Tag::UpperThanL, "<".to_string()));
+        lexer.reserve(Token::new_word(Tag::UpperThanR, ">".to_string()));
+        lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<=".to_string()));
+        lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">=".to_string()));
+        lexer.reserve(Token::new_word(Tag::Equal, "==".to_string()));
+        lexer.reserve(Token::new_word(Tag::NotEqual, "!=".to_string()));
         lexer
     }
 
