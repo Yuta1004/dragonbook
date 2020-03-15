@@ -34,7 +34,7 @@ impl Lexer {
             '0'..='9' => {
                 let (num, size) = consume_num(target);
                 self.nowon += size;
-                Token::new_num(num)
+                Token::new_numi32(num)
             },
             'a'..='z' | 'A'..='Z' | '_' => {
                 let (word, size) = consume_word(target);
@@ -109,7 +109,7 @@ fn consume_word(target_vec: &[char]) -> (String, usize) {
 fn lexer_simple_test() {
     let mut lexer = Lexer::new("gochiusa.com".to_string());
     match lexer.scan() {
-        Token::Num { tag: _, num } => println!("Num: {}", num),
+        Token::NumI32 { tag: _, num } => println!("Num: {}", num),
         Token::Word { tag: _, lexeme } => println!("Word: {}", lexeme),
     }
 }
