@@ -92,16 +92,13 @@ fn consume_num(target_vec: &[char]) -> (i32, usize) {
 
 fn consume_word(target_vec: &[char]) -> (String, usize) {
     let mut word = String::new();
-    let mut size = 0;
     for c in target_vec {
         match c {
-            'a'..='z' | 'A'..='Z' | '_' => {
-                word.push(*c);
-                size += 1;
-            },
+            'a'..='z' | 'A'..='Z' | '_' => word.push(*c),
             _ => break
         }
     }
+    let size = word.chars().count();
     (word, size)
 }
 
