@@ -109,7 +109,8 @@ fn consume_word(target_vec: &[char]) -> (String, usize) {
 fn lexer_simple_test() {
     let mut lexer = Lexer::new("gochiusa.com".to_string());
     match lexer.scan() {
-        Token::NumI32 { num } => println!("Num: {}", num),
+        Token::NumI32 { num } => println!("Num(i32): {}", num),
+        Token::NumF32 { num } => println!("Num(f32): {}", num),
         Token::Word { tag: _, lexeme } => println!("Word: {}", lexeme),
     }
 }

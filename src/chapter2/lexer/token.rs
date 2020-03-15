@@ -17,6 +17,7 @@ pub enum Tag {
 #[derive(Clone)]
 pub enum Token {
     NumI32 { num: i32 },
+    NumF32 { num: f32 },
     Word { tag: Tag, lexeme: String }
 }
 
