@@ -46,7 +46,7 @@ impl Lexer {
                     Token::new_numi32(num as i32)
                 }
             },
-            'a'..='z' | 'A'..='Z' | '_' => {
+            'a'..='z' | 'A'..='Z' | '_' | '<' | '>' | '=' | '!' => {
                 let (word, size) = consume_word(target);
                 self.nowon += size;
                 match self.match_table.get(&word) {
