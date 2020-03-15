@@ -120,7 +120,8 @@ fn lexer_simple_test() {
     "\
 abcde efghj klmno pqrst uvwxy z
 123 456 789 012
-12.345678901 > 23.456789012    !=
+1.23456789 0.00123456
+< > <= >= != == true false
     ".to_string();
 
     let mut lexer = Lexer::new(program);
