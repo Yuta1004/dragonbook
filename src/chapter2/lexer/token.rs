@@ -2,6 +2,7 @@
 mod tests;
 
 use std::clone::Clone;
+use std::str::FromStr;
 
 #[derive(Clone, PartialEq)]
 pub enum Tag {
@@ -32,7 +33,7 @@ impl Token {
         Token::NumF32 { num }
     }
 
-    pub fn new_word(tag: Tag, lexeme: String) -> Token {
-        Token::Word { tag, lexeme }
+    pub fn new_word(tag: Tag, lexeme: &str) -> Token {
+        Token::Word { tag, lexeme: String::from_str(lexeme).unwrap() }
     }
 }

@@ -19,14 +19,14 @@ impl Lexer {
             program: program.chars().collect::<Vec<char>>(),
             match_table: HashMap::new()
         };
-        lexer.reserve(Token::new_word(Tag::True, "true".to_string()));
-        lexer.reserve(Token::new_word(Tag::False, "false".to_string()));
-        lexer.reserve(Token::new_word(Tag::UpperThanL, "<".to_string()));
-        lexer.reserve(Token::new_word(Tag::UpperThanR, ">".to_string()));
-        lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<=".to_string()));
-        lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">=".to_string()));
-        lexer.reserve(Token::new_word(Tag::Equal, "==".to_string()));
-        lexer.reserve(Token::new_word(Tag::NotEqual, "!=".to_string()));
+        lexer.reserve(Token::new_word(Tag::True, "true"));
+        lexer.reserve(Token::new_word(Tag::False, "false"));
+        lexer.reserve(Token::new_word(Tag::UpperThanL, "<"));
+        lexer.reserve(Token::new_word(Tag::UpperThanR, ">"));
+        lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<="));
+        lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">="));
+        lexer.reserve(Token::new_word(Tag::Equal, "=="));
+        lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
         lexer
     }
 
@@ -52,7 +52,7 @@ impl Lexer {
                 match self.match_table.get(&word) {
                     Some(t) => t.clone(),
                     None => {
-                        let nt = Token::new_word(Tag::Id, word);
+                        let nt = Token::new_word(Tag::Id, &word);
                         Self::reserve(self, nt.clone());
                         nt
                     }
