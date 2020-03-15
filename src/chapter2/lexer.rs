@@ -104,10 +104,24 @@ fn consume_word(target_vec: &[char]) -> (String, usize) {
 
 #[test]
 fn lexer_simple_test() {
-    let mut lexer = Lexer::new("gochiusa.com".to_string());
+    // word
+    let mut lexer = Lexer::new("gochiusa  cocoa".to_string());
     match lexer.scan() {
-        Token::NumI32 { num } => println!("Num(i32): {}", num),
-        Token::NumF32 { num } => println!("Num(f32): {}", num),
-        Token::Word { tag: _, lexeme } => println!("Word: {}", lexeme),
+        Token::Word { tag: _, lexeme } if lexeme == "gochiusa" => {},
+        _ => panic!("test failed at [lexer_simple_test::word]")
+    }
+
+    // num(i32)
+    lexer = Lexer::new("1204".to_string());
+    match lexer.scan() {
+        Token::NumI32 { num } if num == 1204 => {},
+        _ => panic!("test failed at [lexer_simple_test::num(i32)")
+    }
+
+    // num(f32)
+    lexer = Lexer::new("1004.1204014".to_string());
+    match lexer.scan() {
+        Token::NumF32 { num } if num == 1004.1204014 => {},
+        _ => panic!("test failed at [lexer_simple_test::num(f32)]")
     }
 }
