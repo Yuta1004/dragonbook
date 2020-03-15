@@ -23,12 +23,12 @@ impl Lexer {
         };
         lexer.reserve(Token::new_word(Tag::True, "true"));
         lexer.reserve(Token::new_word(Tag::False, "false"));
+        lexer.reserve(Token::new_word(Tag::Equal, "=="));
+        lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
         lexer.reserve(Token::new_word(Tag::UpperThanL, "<"));
         lexer.reserve(Token::new_word(Tag::UpperThanR, ">"));
         lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<="));
         lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">="));
-        lexer.reserve(Token::new_word(Tag::Equal, "=="));
-        lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
         lexer
     }
 
@@ -51,7 +51,7 @@ impl Lexer {
                     Some(Token::new_numi32(num as i32))
                 }
             },
-            'a'..='z' | 'A'..='Z' | '_' | '<' | '>' | '=' | '!' => {
+            'A'..='~' | '!'..='/' | ':'..='?' => {
                 let (word, size) = consume_word(target);
                 self.nowon += size;
                 match self.match_table.get(&word) {
@@ -106,7 +106,7 @@ fn consume_word(target_vec: &[char]) -> (String, usize) {
     let mut word = String::new();
     for c in target_vec {
         match c {
-            'a'..='z' | 'A'..='Z' | '_' | '<' | '>' | '=' | '!' => word.push(*c),
+            'A'..='~' | '!'..='/' | ':'..='?' => word.push(*c),
             _ => break
         }
     }
