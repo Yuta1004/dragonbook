@@ -13,12 +13,10 @@ pub struct Lexer {
 
 impl Lexer {
     pub fn new(program: String) -> Lexer {
-        let mut program = program;
-        program.push('@');
         let mut lexer = Lexer {
             line: 1,
             nowon: 0,
-            program: program.chars().collect::<Vec<char>>(),
+            program: (program+"@").chars().collect::<Vec<char>>(),
             match_table: HashMap::new()
         };
         lexer.reserve(Token::new_word(Tag::None, "//"));
