@@ -13,6 +13,8 @@ pub struct Lexer {
 
 impl Lexer {
     pub fn new(program: String) -> Lexer {
+        let mut program = program;
+        program.push('@');
         let mut lexer = Lexer {
             line: 0,
             nowon: 0,
@@ -30,7 +32,10 @@ impl Lexer {
         lexer
     }
 
-    pub fn scan(&mut self) -> Token {
+    pub fn scan(&mut self) -> Option<Token> {
+        if self.program.len() <= self.nowon {
+            return None
+        }
         let (size, line) = skip_space(&self.program[self.nowon..]);
         self.nowon += size;
         self.line += line;
@@ -41,23 +46,24 @@ impl Lexer {
                 let (num, size) = consume_num(target);
                 self.nowon += size;
                 if num - (num as i32) as f32 > 0.0 {
-                    Token::new_numf32(num)
+                    Some(Token::new_numf32(num))
                 } else {
-                    Token::new_numi32(num as i32)
+                    Some(Token::new_numi32(num as i32))
                 }
             },
             'a'..='z' | 'A'..='Z' | '_' | '<' | '>' | '=' | '!' => {
                 let (word, size) = consume_word(target);
                 self.nowon += size;
                 match self.match_table.get(&word) {
-                    Some(t) => t.clone(),
+                    Some(t) => Some(t.clone()),
                     None => {
                         let nt = Token::new_word(Tag::Id, &word);
                         Self::reserve(self, nt.clone());
-                        nt
+                        Some(nt)
                     }
                 }
             },
+            '@' => { self.nowon += 1; None }
             c => panic!("[FAILED] error at line:{} => {}", self.line, c)
         }
     }
@@ -100,7 +106,7 @@ fn consume_word(target_vec: &[char]) -> (String, usize) {
     let mut word = String::new();
     for c in target_vec {
         match c {
-            'a'..='z' | 'A'..='Z' | '_' => word.push(*c),
+            'a'..='z' | 'A'..='Z' | '_' | '<' | '>' | '=' | '!' => word.push(*c),
             _ => break
         }
     }
@@ -110,31 +116,23 @@ fn consume_word(target_vec: &[char]) -> (String, usize) {
 
 #[test]
 fn lexer_simple_test() {
-    // word
-    let mut lexer = Lexer::new("gochiusa  cocoa".to_string());
-    match lexer.scan() {
-        Token::Word { tag: _, lexeme } if lexeme == "gochiusa" => {},
-        _ => panic!("test failed at [lexer_simple_test::word]")
-    }
+    let program =
+    "\
+abcde efghj klmno pqrst uvwxy z
+123 456 789 012
+12.345678901 > 23.456789012    !=
+    ".to_string();
 
-    // word(reserved)
-    lexer = Lexer::new("true".to_string());
-    match lexer.scan() {
-        Token::Word { tag, lexeme: _ } if tag == Tag::True => {}
-        _ => panic!("test failed at [lexer_simple_test::word(reserved)")
-    }
-
-    // num(i32)
-    lexer = Lexer::new("1204".to_string());
-    match lexer.scan() {
-        Token::NumI32 { num } if num == 1204 => {},
-        _ => panic!("test failed at [lexer_simple_test::num(i32)")
-    }
-
-    // num(f32)
-    lexer = Lexer::new("1004.1204014".to_string());
-    match lexer.scan() {
-        Token::NumF32 { num } if num == 1004.1204014 => {},
-        _ => panic!("test failed at [lexer_simple_test::num(f32)]")
+    let mut lexer = Lexer::new(program);
+    loop {
+        if let Some(token) = lexer.scan() {
+            match token {
+                Token::NumI32 { num } => println!("Num(i32): {}", num),
+                Token::NumF32 { num } => println!("Num(f32): {}", num),
+                Token::Word { tag: _, lexeme } => println!("Word: {}", lexeme),
+            }
+        } else {
+            break;
+        }
     }
 }
