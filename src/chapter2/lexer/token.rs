@@ -26,6 +26,10 @@ impl Token {
         Token::NumI32 { num }
     }
 
+    pub fn new_numf32(num: f32) -> Token {
+        Token::NumF32 { num }
+    }
+
     pub fn new_word(tag: Tag, lexeme: String) -> Token {
         Token::Word { tag, lexeme }
     }

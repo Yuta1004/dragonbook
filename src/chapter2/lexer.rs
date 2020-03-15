@@ -34,7 +34,11 @@ impl Lexer {
             '0'..='9' => {
                 let (num, size) = consume_num(target);
                 self.nowon += size;
-                Token::new_numi32(num)
+                if num - (num as i32) as f32 > 0.0 {
+                    Token::new_numf32(num)
+                } else {
+                    Token::new_numi32(num as i32)
+                }
             },
             'a'..='z' | 'A'..='Z' | '_' => {
                 let (word, size) = consume_word(target);
@@ -75,19 +79,15 @@ fn skip_space(target_vec: &[char]) -> (usize, usize) {
     (size, line)
 }
 
-fn consume_num(target_vec: &[char]) -> (i32, usize) {
-    let mut num = 0;
-    let mut size = 0;
+fn consume_num(target_vec: &[char]) -> (f32, usize) {
+    let mut num_str = String::new();
     for c in target_vec {
         match c {
-            '0'..='9' => {
-                num = num*10 + (*c as i32 - '0' as i32);
-                size += 1;
-            },
+            '0'..='9' | '.' => num_str.push(*c),
             _ => break
         }
     }
-    (num, size)
+    (num_str.parse::<f32>().unwrap(), num_str.chars().count())
 }
 
 fn consume_word(target_vec: &[char]) -> (String, usize) {
