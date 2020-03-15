@@ -21,6 +21,9 @@ impl Lexer {
             program: program.chars().collect::<Vec<char>>(),
             match_table: HashMap::new()
         };
+        lexer.reserve(Token::new_word(Tag::None, "//"));
+        lexer.reserve(Token::new_word(Tag::None, "/*"));
+        lexer.reserve(Token::new_word(Tag::None, "*/"));
         lexer.reserve(Token::new_word(Tag::True, "true"));
         lexer.reserve(Token::new_word(Tag::False, "false"));
         lexer.reserve(Token::new_word(Tag::Equal, "=="));
