@@ -5,6 +5,12 @@ use std::clone::Clone;
 
 #[derive(Clone, PartialEq)]
 pub enum Tag {
+    UpperThanL,
+    UpperThanR,
+    UpperEqThanL,
+    UpperEqThanR,
+    Equal,
+    NotEqual,
     Id,
     True,
     False
