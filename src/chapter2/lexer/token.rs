@@ -14,7 +14,8 @@ pub enum Tag {
     NotEqual,
     Id,
     True,
-    False
+    False,
+    None
 }
 
 #[derive(Clone)]
