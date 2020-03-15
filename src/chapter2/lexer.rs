@@ -16,7 +16,7 @@ impl Lexer {
         let mut program = program;
         program.push('@');
         let mut lexer = Lexer {
-            line: 0,
+            line: 1,
             nowon: 0,
             program: program.chars().collect::<Vec<char>>(),
             match_table: HashMap::new()
