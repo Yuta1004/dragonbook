@@ -111,6 +111,13 @@ fn lexer_simple_test() {
         _ => panic!("test failed at [lexer_simple_test::word]")
     }
 
+    // word(reserved)
+    lexer = Lexer::new("true".to_string());
+    match lexer.scan() {
+        Token::Word { tag, lexeme: _ } if tag == Tag::True => {}
+        _ => panic!("test failed at [lexer_simple_test::word(reserved)")
+    }
+
     // num(i32)
     lexer = Lexer::new("1204".to_string());
     match lexer.scan() {
