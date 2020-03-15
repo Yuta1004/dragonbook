@@ -3,7 +3,7 @@ mod tests;
 
 use std::clone::Clone;
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub enum Tag {
     Plus,
     Sub,
