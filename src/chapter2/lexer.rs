@@ -147,10 +147,10 @@ mod tests {
     fn lexer_simple_test() {
         let program =
         "\
-    abcde efghj klmno pqrst uvwxy z
-    123 456 789 012
-    1.23456789 0.00123456
-    < > <= >= != == true false
+abcde efghj klmno pqrst uvwxy z
+123 456 789 012
+1.23456789 0.00123456
+< > <= >= != == true false
         ".to_string();
 
         let mut lexer = Lexer::new(program);
