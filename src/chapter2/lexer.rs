@@ -37,9 +37,7 @@ impl Lexer {
         if self.program.len() <= self.nowon {
             return None
         }
-        let (size, line) = skip_space(&self.program[self.nowon..]);
-        self.nowon += size;
-        self.line += line;
+        Self::skip_space(self);
 
         let target = &self.program[self.nowon..];
         match target[0] {
@@ -77,19 +75,17 @@ impl Lexer {
             _ => {}
         };
     }
-}
 
-fn skip_space(target_vec: &[char]) -> (usize, usize) {
-    let mut size = 0;
-    let mut line = 0;
-    for c in target_vec {
-        match c {
-            ' ' | '\t' => size += 1,
-            '\n' => { line += 1; size += 1 },
-            _ => break
+    fn skip_space(&mut self) {
+        let nowon = self.nowon;
+        for c in &self.program[nowon..] {
+            match c {
+                ' ' | '\t' => self.nowon += 1,
+                '\n' => { self.line += 1; self.nowon += 1 },
+                _ => break
+            }
         }
     }
-    (size, line)
 }
 
 fn consume_num(target_vec: &[char]) -> (f32, usize) {
