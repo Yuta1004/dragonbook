@@ -3,6 +3,13 @@ use super::token::Tag;
 /// 型を管理する列挙体
 ///
 /// # members
+/// - I32 { tag: Tag, size: usize } => 整数型(32)
+/// - F32 { tag: Tag, size: usize } => 小数型(32)
+/// - Char { tag: Tag, size: usize } => 文字型(8)
+///
+/// # derive
+/// - PartialEq
+#[derive(PartialEq)]
 pub enum Type {
     I32 { tag: Tag, size: usize },
     F32 { tag: Tag, size: usize },
