@@ -12,6 +12,13 @@ pub struct Lexer {
 }
 
 impl Lexer {
+    /// Lexer構造体を生成して返す
+    ///
+    /// # params
+    /// - program: String => 字句解析対象文字列
+    ///
+    /// # returns
+    /// - Lexer
     pub fn new(program: String) -> Lexer {
         let mut lexer = Lexer {
             line: 1,
@@ -33,6 +40,10 @@ impl Lexer {
         lexer
     }
 
+    /// 1字句だけ解析を行い、解析結果<Token>を返す
+    ///
+    /// # returns
+    /// - Option<Token>
     pub fn scan(&mut self) -> Option<Token> {
         if self.program.len() <= self.nowon {
             return None
@@ -65,6 +76,10 @@ impl Lexer {
         }
     }
 
+    /// 予約語など、既知の語を管理対象として追加する
+    ///
+    /// # params
+    /// - token: Token => 追加するToken
     fn reserve(&mut self, token: Token) {
         match token.clone() {
             Token::Word { tag: _, lexeme } => {
@@ -74,6 +89,7 @@ impl Lexer {
         };
     }
 
+    /// 解析中の場所から連続する空白/タブ/改行文字を読み飛ばす
     fn skip_space(&mut self) {
         let nowon = self.nowon;
         for c in &self.program[nowon..] {
@@ -85,6 +101,10 @@ impl Lexer {
         }
     }
 
+    /// 解析中の場所から連続する数字列を読み取って、その値を返す
+    ///
+    /// # returns
+    /// - f32
     fn consume_num(&mut self) -> f32 {
         let nowon = self.nowon;
         let mut num_str = String::new();
@@ -100,6 +120,10 @@ impl Lexer {
         num_str.parse::<f32>().unwrap()
     }
 
+    /// 解析中の場所から連続する文字列を読み取って、その値を返す
+    ///
+    /// # returns
+    /// - String
     fn consume_word(&mut self) -> String {
         let nowon = self.nowon;
         let mut word = String::new();
