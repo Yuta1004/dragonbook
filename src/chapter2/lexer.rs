@@ -1,8 +1,6 @@
-mod token;
-
 use std::collections::HashMap;
 
-use token::{Tag, Token};
+use super::token::{Tag, Token};
 
 pub struct Lexer {
     line: usize,
