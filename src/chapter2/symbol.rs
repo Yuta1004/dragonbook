@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use super::mtype::Type;
 
 /// 記号表で管理する1単位を表す
@@ -23,6 +25,16 @@ impl Symbol {
     pub fn new(lexeme: String, ty: Type) -> Symbol {
         Symbol { lexeme, ty }
     }
+}
+
+/// 記号表
+///
+/// # members
+/// - prev: Box<SymbolTable> => 上位に位置する記号表をもつ
+/// - table: String, Symbolの照合表
+pub struct SymbolTable {
+    prev: Box<Option<SymbolTable>>,
+    table: HashMap<String, Symbol>
 }
 
 #[cfg(test)]
