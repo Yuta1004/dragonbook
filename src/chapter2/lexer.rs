@@ -50,8 +50,7 @@ impl Lexer {
                 }
             },
             'A'..='~' | '!'..='/' | ':'..='?' => {
-                let (word, size) = consume_word(target);
-                self.nowon += size;
+                let word = Self::consume_word(self);
                 match self.match_table.get(&word) {
                     Some(t) => Some(t.clone()),
                     None => {
@@ -100,18 +99,21 @@ impl Lexer {
         }
         num_str.parse::<f32>().unwrap()
     }
-}
 
-fn consume_word(target_vec: &[char]) -> (String, usize) {
-    let mut word = String::new();
-    for c in target_vec {
-        match c {
-            'A'..='~' | '!'..='/' | ':'..='?' => word.push(*c),
-            _ => break
+    fn consume_word(&mut self) -> String {
+        let nowon = self.nowon;
+        let mut word = String::new();
+        for c in &self.program[nowon..] {
+            match c {
+                'A'..='~' | '!'..='/' | ':'..='?' => {
+                    word.push(*c);
+                    self.nowon += 1;
+                }
+                _ => break
+            }
         }
+        word
     }
-    let size = word.chars().count();
-    (word, size)
 }
 
 #[test]
