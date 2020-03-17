@@ -42,8 +42,7 @@ impl Lexer {
         let target = &self.program[self.nowon..];
         match target[0] {
             '0'..='9' => {
-                let (num, size) = consume_num(target);
-                self.nowon += size;
+                let num = Self::consume_num(self);
                 if num - (num as i32) as f32 > 0.0 {
                     Some(Token::new_numf32(num))
                 } else {
@@ -86,17 +85,21 @@ impl Lexer {
             }
         }
     }
-}
 
-fn consume_num(target_vec: &[char]) -> (f32, usize) {
-    let mut num_str = String::new();
-    for c in target_vec {
-        match c {
-            '0'..='9' | '.' => num_str.push(*c),
-            _ => break
+    fn consume_num(&mut self) -> f32 {
+        let nowon = self.nowon;
+        let mut num_str = String::new();
+        for c in &self.program[nowon..] {
+            match c {
+                '0'..='9' | '.' => {
+                    num_str.push(*c);
+                    self.nowon += 1;
+                },
+                _ => break
+            }
         }
+        num_str.parse::<f32>().unwrap()
     }
-    (num_str.parse::<f32>().unwrap(), num_str.chars().count())
 }
 
 fn consume_word(target_vec: &[char]) -> (String, usize) {
