@@ -17,6 +17,9 @@ pub enum Tag {
     Id,
     True,
     False,
+    I32,
+    F32,
+    Char,
     None
 }
 
