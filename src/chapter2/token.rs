@@ -75,9 +75,13 @@ impl Token {
 }
 
 #[cfg(test)]
-#[test]
-fn token_new_test() {
-    let _ = Token::new_numi32(10);
-    let _ = Token::new_numf32(12.04);
-    let _ = Token::new_word(Tag::Id, "abcdefghijklmn");
+mod tests {
+    use super::{Token, Tag};
+
+    #[test]
+    fn token_new_test() {
+        let _ = Token::new_numi32(10);
+        let _ = Token::new_numf32(12.04);
+        let _ = Token::new_word(Tag::Id, "abcdefghijklmn");
+    }
 }

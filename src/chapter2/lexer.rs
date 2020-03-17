@@ -138,26 +138,32 @@ impl Lexer {
     }
 }
 
-#[test]
-fn lexer_simple_test() {
-    let program =
-    "\
-abcde efghj klmno pqrst uvwxy z
-123 456 789 012
-1.23456789 0.00123456
-< > <= >= != == true false
-    ".to_string();
+#[cfg(test)]
+mod tests {
+    use super::Lexer;
+    use super::super::token::Token;
 
-    let mut lexer = Lexer::new(program);
-    loop {
-        if let Some(token) = lexer.scan() {
-            match token {
-                Token::NumI32 { num } => println!("Num(i32): {}", num),
-                Token::NumF32 { num } => println!("Num(f32): {}", num),
-                Token::Word { tag: _, lexeme } => println!("Word: {}", lexeme),
+    #[test]
+    fn lexer_simple_test() {
+        let program =
+        "\
+    abcde efghj klmno pqrst uvwxy z
+    123 456 789 012
+    1.23456789 0.00123456
+    < > <= >= != == true false
+        ".to_string();
+
+        let mut lexer = Lexer::new(program);
+        loop {
+            if let Some(token) = lexer.scan() {
+                match token {
+                    Token::NumI32 { num } => println!("Num(i32): {}", num),
+                    Token::NumF32 { num } => println!("Num(f32): {}", num),
+                    Token::Word { tag: _, lexeme } => println!("Word: {}", lexeme),
+                }
+            } else {
+                break;
             }
-        } else {
-            break;
         }
     }
 }

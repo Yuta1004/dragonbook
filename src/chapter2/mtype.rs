@@ -43,9 +43,13 @@ impl Type {
 }
 
 #[cfg(test)]
-#[test]
-fn type_new_test() {
-    let _ = Type::new_i32();
-    let _ = Type::new_f32();
-    let _ = Type::new_char();
+mod tests {
+    use super::Type;
+
+    #[test]
+    fn type_new_test() {
+        let _ = Type::new_i32();
+        let _ = Type::new_f32();
+        let _ = Type::new_char();
+    }
 }
