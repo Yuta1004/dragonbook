@@ -1,6 +1,3 @@
-#[cfg(test)]
-mod tests;
-
 use std::clone::Clone;
 use std::str::FromStr;
 
@@ -37,4 +34,12 @@ impl Token {
     pub fn new_word(tag: Tag, lexeme: &str) -> Token {
         Token::Word { tag, lexeme: String::from_str(lexeme).unwrap() }
     }
+}
+
+#[cfg(test)]
+#[test]
+fn token_new_test() {
+    let _ = Token::new_numi32(10);
+    let _ = Token::new_numf32(12.04);
+    let _ = Token::new_word(Tag::Id, "abcdefghijklmn");
 }
