@@ -60,6 +60,14 @@ impl SymbolTable {
             )
         )
     }
+
+    /// 記号表に要素を追加する
+    ///
+    /// # params
+    /// - symbol: Symbol => 追加する記号要素
+    pub fn add(&mut self, symbol: Symbol) {
+        self.table.insert(symbol.lexeme.clone(), symbol);
+    }
 }
 
 #[cfg(test)]
@@ -75,8 +83,11 @@ mod tests {
     }
 
     #[test]
-    fn symbol_table_new_test() {
-        let root = SymbolTable::new();
-        let _ = SymbolTable::new_with_table(root);
+    fn symboltable_simple_test() {
+        let table_a = SymbolTable::new();
+        let table_b  = SymbolTable::new_with_table(table_a);
+
+        let symbol = Symbol::new("a".to_string(), Type::new_i32());
+        table_b.unwrap().add(symbol);
     }
 }
