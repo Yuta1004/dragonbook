@@ -7,7 +7,11 @@ use super::mtype::Type;
 /// # members
 /// - lexeme: String => 語
 /// - ty: Type => 型
-#[derive(PartialEq)]
+///
+/// # derive
+/// - PartialEq
+/// - Clone
+#[derive(PartialEq, Clone)]
 pub struct Symbol {
     lexeme: String,
     ty: Type

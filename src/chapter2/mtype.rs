@@ -9,7 +9,8 @@ use super::token::Tag;
 ///
 /// # derive
 /// - PartialEq
-#[derive(PartialEq)]
+/// - Clone
+#[derive(PartialEq, Clone)]
 pub enum Type {
     I32 { tag: Tag, size: usize },
     F32 { tag: Tag, size: usize },
