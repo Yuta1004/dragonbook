@@ -1,5 +1,6 @@
 use super::Parser;
 use super::super::lexer::Lexer;
+use super::super::token::Token;
 use super::super::symbol::{Symbol, SymbolTable};
 
 /// 定義と使用からなるプログラムをパースする
@@ -36,6 +37,22 @@ impl DefParser {
     /// DefParser
     pub fn new_with_symboltable(lexer: Lexer, symboltable: SymbolTable) -> DefParser {
         DefParser { lexer, symboltable }
+    }
+
+    /// factor: 構文の最小単位
+    /// 記号表をチェックして登録済みのIDなら出力
+    fn factor(&mut self) {
+        if let Some(token) = self.lexer.scan() {
+            if let Token::Word { tag: _, lexeme } = token {
+                match self.symboltable.search(lexeme.clone()) {
+                    Some(symbol) => {
+                        let Symbol { lexeme: _, ty } = symbol;
+                        println!("{}:{}", lexeme, ty);
+                    },
+                    None => panic!("undefined symbol => {}", lexeme)
+                }
+            }
+        }
     }
 }
 
