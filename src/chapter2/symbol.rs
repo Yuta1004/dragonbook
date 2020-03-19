@@ -13,8 +13,8 @@ use super::mtype::Type;
 /// - Clone
 #[derive(PartialEq, Clone)]
 pub struct Symbol {
-    lexeme: String,
-    ty: Type
+    pub lexeme: String,
+    pub ty: Type
 }
 
 impl Symbol {

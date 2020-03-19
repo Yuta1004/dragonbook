@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use super::token::{Tag, Token};
 
 pub struct Lexer {
-    line: usize,
-    nowon: usize,
+    pub line: usize,
+    pub nowon: usize,
     program: Vec<char>,
     match_table: HashMap<String, Token>
 }
