@@ -61,6 +61,14 @@ impl SymbolTable {
         SymbolTable { prev: Box::new(Some(prev)), table: HashMap::new() }
     }
 
+    /// 保持している親に当たる記号表を返す
+    ///
+    /// # return
+    /// Option<SymbolTable>
+    pub fn release(self) -> Option<SymbolTable> {
+        *self.prev
+    }
+
     /// 記号表に要素を追加する
     ///
     /// # params
@@ -129,6 +137,9 @@ mod tests {
         validate_symbol(table_c.search("b".to_string()), "b", Type::new_f32());
         validate_symbol(table_c.search("c".to_string()), "c", Type::new_i32());
         validate_symbol(table_c.search("d".to_string()), "d", Type::new_f32());
+
+        let table_b = table_c.release().unwrap();
+        let _table_a = table_b.release().unwrap();
     }
 
     fn validate_symbol(symbol: Option<Symbol>, lexemec: &str, tyc: Type) {
