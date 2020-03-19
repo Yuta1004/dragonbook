@@ -45,11 +45,8 @@ impl DefParser {
         if let Some(token) = self.lexer.scan() {
             if let Token::Word { tag: _, lexeme } = token {
                 match self.symboltable.search(lexeme.clone()) {
-                    Some(symbol) => {
-                        let Symbol { lexeme: _, ty } = symbol;
-                        println!("{}:{}", lexeme, ty);
-                    },
-                    None => panic!("undefined symbol => {}", lexeme)
+                    Some(symbol) => println!("{}:{}", symbol.lexeme, symbol.ty),
+                    None =>         panic!("undefined symbol => {}", lexeme)
                 }
             }
         }
