@@ -1,8 +1,11 @@
+use super::Parser;
 use super::super::lexer::Lexer;
 
 struct DefParser {
     lexer: Lexer
 }
+
+impl Parser for DefParser {}
 
 impl DefParser {
     pub fn new(lexer: Lexer) -> DefParser {

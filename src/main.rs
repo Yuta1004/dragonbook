@@ -1,6 +1,6 @@
 use std::env;
 use std::process::exit;
-use dragonbook::chapter2::parser::infix2suffix::Parser;
+use dragonbook::chapter2::parser::infix2suffix::Infix2Suffix;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -10,7 +10,7 @@ fn main() {
     }
     let expr = args[1].to_string();
 
-    let mut parser = Parser::new(expr);
+    let mut parser = Infix2Suffix::new(expr);
     parser.parse();
     println!();
 }

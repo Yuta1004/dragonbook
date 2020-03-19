@@ -1,9 +1,13 @@
-pub struct Parser {
+use super::Parser;
+
+pub struct Infix2Suffix {
     expr: String,
     lookidx: i32,
 }
 
-impl Parser {
+impl Parser for Infix2Suffix {}
+
+impl Infix2Suffix {
     /// Parser構造体を生成して返す
     ///
     /// # Params
@@ -11,8 +15,8 @@ impl Parser {
     ///
     /// # Return
     /// Parser
-    pub fn new(expr: String) -> Parser {
-        Parser{ expr, lookidx: 0 }
+    pub fn new(expr: String) -> Infix2Suffix {
+        Infix2Suffix { expr, lookidx: 0 }
     }
 
     /// expr -> term rest
@@ -85,42 +89,42 @@ impl Parser {
 
 #[cfg(test)]
 mod tests {
-    use super::super::infix2suffix::Parser;
+    use super::super::infix2suffix::Infix2Suffix;
 
     #[test]
     fn new_test() {
-        let _ = Parser::new("1+1".to_string());
+        let _ = Infix2Suffix::new("1+1".to_string());
     }
 
     #[test]
     fn parse_test() {
-        let mut parser = Parser::new("9+5-2".to_string());
+        let mut parser = Infix2Suffix::new("9+5-2".to_string());
         parser.parse();
     }
 
     #[test]
     fn term_test() {
-        let mut parser = Parser::new("2+2".to_string());
+        let mut parser = Infix2Suffix::new("2+2".to_string());
         parser.term();
     }
 
     #[test]
     fn expect_test() {
-        let mut parser = Parser::new("abcdefg".to_string());
+        let mut parser = Infix2Suffix::new("abcdefg".to_string());
         assert!(parser.expect('a'));
         assert!(!parser.expect('A'));
     }
 
     #[test]
     fn lookahead_test() {
-        let parser = Parser::new("abcdefg".to_string());
+        let parser = Infix2Suffix::new("abcdefg".to_string());
         assert_eq!('a', parser.get_lookahead());
     }
 
     #[test]
     #[should_panic]
     fn error_test() {
-        let parser = Parser::new("abcdefg".to_string());
+        let parser = Infix2Suffix::new("abcdefg".to_string());
         parser.error("PANIC");
     }
 }

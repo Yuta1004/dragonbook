@@ -1,4 +1,5 @@
 pub mod parser {
+    trait Parser {}
     pub mod infix2suffix;
     pub mod defparser;
 }
