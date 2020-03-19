@@ -39,31 +39,6 @@ impl Lexer {
         let target = &self.program[self.nowon..];
         let c = target[0]; let n = target[1];
         match c {
-            // 記号
-            '<' if n == '=' => {
-                self.nowon += 2;
-                Some(Token::new_word(Tag::UpperEqThanL, "<="))
-            },
-            '>' if n == '=' => {
-                self.nowon += 2;
-                Some(Token::new_word(Tag::UpperEqThanR, ">="))
-            },
-            '=' if n == '=' => {
-                self.nowon += 2;
-                Some(Token::new_word(Tag::Equal, "=="))
-            },
-            '!' if n == '=' => {
-                self.nowon += 2;
-                Some(Token::new_word(Tag::NotEqual, "!="))
-            },
-            '<' => {
-                self.nowon += 1;
-                Some(Token::new_word(Tag::UpperThanL, "<"))
-            },
-            '>' => {
-                self.nowon += 1;
-                Some(Token::new_word(Tag::UpperThanR, "<"))
-            },
             // 数字
             '0'..='9' => {
                 let num = Self::consume_num(self);
@@ -73,9 +48,14 @@ impl Lexer {
                     Some(Token::new_numi32(num as i32))
                 }
             },
-            // 語
-            'a'..='z' | 'A'..='Z' | '_' => {
-                let word = Self::consume_word(self);
+            // 語 or 記号
+            'a'..='z' | 'A'..='Z' | '_' | '!' | '<'..='>' => {
+                let word: String;
+                if let Some(w) = Self::consume_mark(self) {
+                    word = w;
+                } else {
+                    word = Self::consume_word(self);
+                }
                 match self.match_table.get(&word) {
                     Some(t) => Some(t.clone()),
                     None => {
@@ -87,8 +67,8 @@ impl Lexer {
             },
             // 未定義文字
             '@' => { self.nowon += 1; None },
-            _ if target[1] == '@' => { self.nowon += 1; None }
-            c => panic!("[FAILED] error at line:{} => {}", self.line, c)
+            _ if n == '@' => { self.nowon += 1; None }
+            _ => panic!("[FAILED] error at line:{} => {}", self.line, c)
         }
     }
 
@@ -153,6 +133,35 @@ impl Lexer {
             }
         }
         word
+    }
+
+    /// 解析中の場所から記号を読み取って、その値を返す
+    ///
+    /// # returns
+    /// Option<String>
+    fn consume_mark(&mut self) -> Option<String> {
+        let mut word = None;
+        let c = self.program[self.nowon];
+        let n = self.program[self.nowon+1];
+
+        // 2文字記号
+        match n {
+            '=' if c == '>' => word = Some(">=".to_string()),
+            '=' if c == '<' => word = Some("<=".to_string()),
+            '=' if c == '=' => word = Some("==".to_string()),
+            '=' if c == '!' => word = Some("!=".to_string()),
+            _ => {}
+        }
+        if word != None { self.nowon += 2; return word; }
+
+        // 1文字記号
+        match c {
+            '>' => word = Some(">".to_string()),
+            '<' => word = Some("<".to_string()),
+            _ => {}
+        }
+        if word != None { self.nowon += 1; return word; }
+        return None
     }
 }
 
