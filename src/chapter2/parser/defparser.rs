@@ -1,15 +1,17 @@
 use super::Parser;
 use super::super::lexer::Lexer;
+use super::super::symbol::{Symbol, SymbolTable};
 
 struct DefParser {
-    lexer: Lexer
+    lexer: Lexer,
+    symboltable: SymbolTable
 }
 
 impl Parser for DefParser {}
 
 impl DefParser {
     pub fn new(lexer: Lexer) -> DefParser {
-        DefParser { lexer }
+        DefParser { lexer, symboltable: SymbolTable::new() }
     }
 }
 
