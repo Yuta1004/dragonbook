@@ -18,24 +18,12 @@ impl Lexer {
     /// # returns
     /// - Lexer
     pub fn new(program: String) -> Lexer {
-        let mut lexer = Lexer {
+        Lexer {
             line: 1,
             nowon: 0,
             program: (program+"@").chars().collect::<Vec<char>>(),
             match_table: HashMap::new()
-        };
-        lexer.reserve(Token::new_word(Tag::None, "//"));
-        lexer.reserve(Token::new_word(Tag::None, "/*"));
-        lexer.reserve(Token::new_word(Tag::None, "*/"));
-        lexer.reserve(Token::new_word(Tag::True, "true"));
-        lexer.reserve(Token::new_word(Tag::False, "false"));
-        lexer.reserve(Token::new_word(Tag::Equal, "=="));
-        lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
-        lexer.reserve(Token::new_word(Tag::UpperThanL, "<"));
-        lexer.reserve(Token::new_word(Tag::UpperThanR, ">"));
-        lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<="));
-        lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">="));
-        lexer
+        }
     }
 
     /// 1字句だけ解析を行い、解析結果<Token>を返す
@@ -78,7 +66,7 @@ impl Lexer {
     ///
     /// # params
     /// - token: Token => 追加するToken
-    fn reserve(&mut self, token: Token) {
+    pub fn reserve(&mut self, token: Token) {
         match token.clone() {
             Token::Word { tag: _, lexeme } => {
                 self.match_table.insert(lexeme.clone(), token);
@@ -141,7 +129,7 @@ impl Lexer {
 #[cfg(test)]
 mod tests {
     use super::Lexer;
-    use super::super::token::Token;
+    use super::super::token::{Token, Tag};
 
     #[test]
     fn lexer_simple_test() {
@@ -153,7 +141,7 @@ abcde efghj klmno pqrst uvwxy z
 < > <= >= != == true false
         ".to_string();
 
-        let mut lexer = Lexer::new(program);
+        let mut lexer = gen_lexer(program);
         loop {
             if let Some(token) = lexer.scan() {
                 match token {
@@ -165,5 +153,18 @@ abcde efghj klmno pqrst uvwxy z
                 break;
             }
         }
+    }
+
+    fn gen_lexer(program: String) -> Lexer {
+        let mut lexer = Lexer::new(program);
+        lexer.reserve(Token::new_word(Tag::True, "true"));
+        lexer.reserve(Token::new_word(Tag::False, "false"));
+        lexer.reserve(Token::new_word(Tag::Equal, "=="));
+        lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
+        lexer.reserve(Token::new_word(Tag::UpperThanL, "<"));
+        lexer.reserve(Token::new_word(Tag::UpperThanR, ">"));
+        lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<="));
+        lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">="));
+        lexer
     }
 }
