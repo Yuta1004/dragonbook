@@ -68,6 +68,29 @@ impl SymbolTable {
     pub fn add(&mut self, symbol: Symbol) {
         self.table.insert(symbol.lexeme.clone(), symbol);
     }
+
+    /// 記号表から要素を検索する
+    ///
+    /// # params
+    /// - target: String => 要素名
+    ///
+    /// # returns
+    /// Symbol
+    pub fn search(&self, target: String) -> Option<Symbol>{
+        Self::search_table(&target, self)
+    }
+
+    fn search_table(target: &String, symboltable: &SymbolTable) -> Option<Symbol> {
+        match symboltable.table.get(target) {
+            Some(symbol) => Some(symbol.clone()),
+            None => {
+                match *(symboltable.prev) {
+                    Some(ref table) => Self::search_table(target, table),
+                    None => None
+                }
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -87,7 +110,18 @@ mod tests {
         let table_a = SymbolTable::new();
         let mut table_b  = SymbolTable::new_with_table(table_a);
 
-        let symbol = Symbol::new("a".to_string(), Type::new_i32());
-        table_b.add(symbol);
+        table_b.add(
+            Symbol::new("a".to_string(), Type::new_i32())
+        );
+        table_b.add(
+            Symbol::new("b".to_string(), Type::new_f32())
+        );
+
+        for tag in vec!["a", "b"] {
+            match table_b.search(tag.to_string()) {
+                Some(Symbol { lexeme, ty: _ }) if lexeme == tag => {},
+                _ => panic!("test failed at [symboltable_simple_test]")
+            }
+        }
     }
 }
