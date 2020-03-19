@@ -111,17 +111,14 @@ impl Lexer {
     /// # returns
     /// - f32
     fn consume_num(&mut self) -> f32 {
-        let nowon = self.nowon;
         let mut num_str = String::new();
-        for c in &self.program[nowon..] {
+        for c in &self.program[self.nowon..] {
             match c {
-                '0'..='9' | '.' => {
-                    num_str.push(*c);
-                    self.nowon += 1;
-                },
+                '0'..='9' | '.' => num_str.push(*c),
                 _ => break
             }
         }
+        self.nowon += num_str.chars().count();
         num_str.parse::<f32>().unwrap()
     }
 
@@ -130,15 +127,14 @@ impl Lexer {
     /// # returns
     /// - String
     fn consume_word(&mut self) -> String {
-        let nowon = self.nowon;
         let mut word = String::new();
-        for c in &self.program[nowon..] {
+        for c in &self.program[self.nowon..] {
             match c {
                 'A'..='~' | '!'..='/' | ':'..='?' => word.push(*c),
                 _ => break
             }
-            self.nowon += 1;
         }
+        self.nowon += word.chars().count();
         word
     }
 
