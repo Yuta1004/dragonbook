@@ -46,8 +46,7 @@ impl Lexer {
         Self::skip_space(self);
 
         let target = &self.program[self.nowon..];
-        let c = target[0]; let n = target[1];
-        match c {
+        match target[0] {
             // 数字
             '0'..='9' => {
                 let num = Self::consume_num(self);
@@ -75,9 +74,9 @@ impl Lexer {
                 }
             },
             // 未定義文字
-            '@' =>           { self.nowon += 1; None },
-            _ if n == '@' => { self.nowon += 1; None }
-            _ => panic!("[FAILED] error at line:{} => {}", self.line, c)
+            '@' =>                   { self.nowon += 1; None },
+            _ if target[1] == '@' => { self.nowon += 1; None }
+            c => panic!("[FAILED] error at line:{} => {}", self.line, c)
         }
     }
 
