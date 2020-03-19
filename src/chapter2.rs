@@ -1,5 +1,6 @@
 pub mod parser {
     pub mod infix2suffix;
+    pub mod defparser;
 }
 pub mod lexer;
 pub mod token;
