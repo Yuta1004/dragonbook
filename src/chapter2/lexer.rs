@@ -32,6 +32,9 @@ impl Lexer {
         lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">="));
         lexer.reserve(Token::new_word(Tag::Equal, "=="));
         lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
+        lexer.reserve(Token::new_word(Tag::SBrackets, "{"));
+        lexer.reserve(Token::new_word(Tag::GBrackets, "}"));
+        lexer.reserve(Token::new_word(Tag::SemiColon, ";"));
         lexer
     }
 
@@ -57,7 +60,7 @@ impl Lexer {
                 }
             },
             // 語 or 記号
-            'a'..='z' | 'A'..='Z' | '_' | '!' | '<'..='>' => {
+            'a'..='z' | 'A'..='Z' | '_' | '!' | ';'..='>' | '{' | '}' => {
                 let word: String;
                 if let Some(w) = Self::consume_mark(self) {
                     word = w;
@@ -129,7 +132,7 @@ impl Lexer {
         let mut word = String::new();
         for c in &self.program[self.nowon..] {
             match c {
-                'A'..='~' | '!'..='/' | ':'..='?' => word.push(*c),
+                'a'..='z' | 'A'..='Z' | '_' => word.push(*c),
                 _ => break
             }
         }
@@ -160,6 +163,9 @@ impl Lexer {
         match c {
             '>' => word = Some(">".to_string()),
             '<' => word = Some("<".to_string()),
+            '{' => word = Some("{".to_string()),
+            '}' => word = Some("}".to_string()),
+            ';' => word = Some(";".to_string()),
             _ => {}
         }
         if word != None { self.nowon += 1; return word; }
@@ -176,11 +182,13 @@ mod tests {
     fn lexer_simple_test() {
         let program =
         "\
-abcde efghj klmno pqrst uvwxy z
-123 456 789 012
-1.23456789 0.00123456
-< > <= >= != == true false
-10>=20 30<=40 1<2 3>0 abc!=def
+{
+    abcde efghj klmno pqrst uvwxy z;
+    123 456 789 012;
+    1.23456789 0.00123456;
+    < > <= >= != == true false;
+    10>=20 30<=40 1<2 3>0 abc!=def;
+}
         ".to_string();
 
         let mut lexer = Lexer::new(program);
