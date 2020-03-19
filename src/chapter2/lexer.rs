@@ -115,12 +115,10 @@ impl Lexer {
         let mut word = String::new();
         for c in &self.program[nowon..] {
             match c {
-                'A'..='~' | '!'..='/' | ':'..='?' => {
-                    word.push(*c);
-                    self.nowon += 1;
-                }
+                'A'..='~' | '!'..='/' | ':'..='?' => word.push(*c),
                 _ => break
             }
+            self.nowon += 1;
         }
         word
     }
