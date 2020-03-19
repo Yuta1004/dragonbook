@@ -18,12 +18,21 @@ impl Lexer {
     /// # returns
     /// - Lexer
     pub fn new(program: String) -> Lexer {
-        Lexer {
+        let mut lexer = Lexer {
             line: 1,
             nowon: 0,
             program: (program+"@").chars().collect::<Vec<char>>(),
             match_table: HashMap::new()
-        }
+        };
+        lexer.reserve(Token::new_word(Tag::True, "true"));
+        lexer.reserve(Token::new_word(Tag::False, "false"));
+        lexer.reserve(Token::new_word(Tag::UpperThanL, "<"));
+        lexer.reserve(Token::new_word(Tag::UpperThanR, ">"));
+        lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<="));
+        lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">="));
+        lexer.reserve(Token::new_word(Tag::Equal, "=="));
+        lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
+        lexer
     }
 
     /// 1字句だけ解析を行い、解析結果<Token>を返す
@@ -66,7 +75,7 @@ impl Lexer {
                 }
             },
             // 未定義文字
-            '@' => { self.nowon += 1; None },
+            '@' =>           { self.nowon += 1; None },
             _ if n == '@' => { self.nowon += 1; None }
             _ => panic!("[FAILED] error at line:{} => {}", self.line, c)
         }
@@ -168,7 +177,7 @@ impl Lexer {
 #[cfg(test)]
 mod tests {
     use super::Lexer;
-    use super::super::token::{Token, Tag};
+    use super::super::token::Token;
 
     #[test]
     fn lexer_simple_test() {
@@ -181,7 +190,7 @@ abcde efghj klmno pqrst uvwxy z
 10>=20 30<=40 1<2 3>0 abc!=def
         ".to_string();
 
-        let mut lexer = gen_lexer(program);
+        let mut lexer = Lexer::new(program);
         loop {
             if let Some(token) = lexer.scan() {
                 match token {
@@ -193,12 +202,5 @@ abcde efghj klmno pqrst uvwxy z
                 break;
             }
         }
-    }
-
-    fn gen_lexer(program: String) -> Lexer {
-        let mut lexer = Lexer::new(program);
-        lexer.reserve(Token::new_word(Tag::True, "true"));
-        lexer.reserve(Token::new_word(Tag::False, "false"));
-        lexer
     }
 }
