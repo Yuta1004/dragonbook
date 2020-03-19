@@ -1,3 +1,5 @@
+use std::fmt;
+
 use super::token::Tag;
 
 /// 型を管理する列挙体
@@ -40,6 +42,17 @@ impl Type {
     /// - Type
     pub fn new_char() -> Type {
         Type::Char { tag: Tag::Char, size: 1 }
+    }
+}
+
+/// Displayトレイト
+impl fmt::Display for Type {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Type::I32 { tag: _, size: _ } => write!(f, "i32"),
+            Type::F32 { tag: _, size: _ } => write!(f, "f32"),
+            Type::Char { tag: _, size: _ } => write!(f, "char")
+        }
     }
 }
 
