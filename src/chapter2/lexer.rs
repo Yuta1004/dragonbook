@@ -18,12 +18,21 @@ impl Lexer {
     /// # returns
     /// - Lexer
     pub fn new(program: String) -> Lexer {
-        Lexer {
+        let mut lexer = Lexer {
             line: 1,
             nowon: 0,
             program: (program+"@").chars().collect::<Vec<char>>(),
             match_table: HashMap::new()
-        }
+        };
+        lexer.reserve(Token::new_word(Tag::True, "true"));
+        lexer.reserve(Token::new_word(Tag::False, "false"));
+        lexer.reserve(Token::new_word(Tag::UpperThanL, "<"));
+        lexer.reserve(Token::new_word(Tag::UpperThanR, ">"));
+        lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<="));
+        lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">="));
+        lexer.reserve(Token::new_word(Tag::Equal, "=="));
+        lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
+        lexer
     }
 
     /// 1字句だけ解析を行い、解析結果<Token>を返す
@@ -37,7 +46,9 @@ impl Lexer {
         Self::skip_space(self);
 
         let target = &self.program[self.nowon..];
-        match target[0] {
+        let c = target[0]; let n = target[1];
+        match c {
+            // 数字
             '0'..='9' => {
                 let num = Self::consume_num(self);
                 if num - (num as i32) as f32 > 0.0 {
@@ -46,8 +57,14 @@ impl Lexer {
                     Some(Token::new_numi32(num as i32))
                 }
             },
-            'A'..='~' | '!'..='/' | ':'..='?' => {
-                let word = Self::consume_word(self);
+            // 語 or 記号
+            'a'..='z' | 'A'..='Z' | '_' | '!' | '<'..='>' => {
+                let word: String;
+                if let Some(w) = Self::consume_mark(self) {
+                    word = w;
+                } else {
+                    word = Self::consume_word(self);
+                }
                 match self.match_table.get(&word) {
                     Some(t) => Some(t.clone()),
                     None => {
@@ -57,8 +74,10 @@ impl Lexer {
                     }
                 }
             },
-            '@' => { self.nowon += 1; None }
-            c => panic!("[FAILED] error at line:{} => {}", self.line, c)
+            // 未定義文字
+            '@' =>           { self.nowon += 1; None },
+            _ if n == '@' => { self.nowon += 1; None }
+            _ => panic!("[FAILED] error at line:{} => {}", self.line, c)
         }
     }
 
@@ -122,12 +141,41 @@ impl Lexer {
         }
         word
     }
+
+    /// 解析中の場所から記号を読み取って、その値を返す
+    ///
+    /// # returns
+    /// Option<String>
+    fn consume_mark(&mut self) -> Option<String> {
+        let mut word = None;
+        let c = self.program[self.nowon];
+        let n = self.program[self.nowon+1];
+
+        // 2文字記号
+        match n {
+            '=' if c == '>' => word = Some(">=".to_string()),
+            '=' if c == '<' => word = Some("<=".to_string()),
+            '=' if c == '=' => word = Some("==".to_string()),
+            '=' if c == '!' => word = Some("!=".to_string()),
+            _ => {}
+        }
+        if word != None { self.nowon += 2; return word; }
+
+        // 1文字記号
+        match c {
+            '>' => word = Some(">".to_string()),
+            '<' => word = Some("<".to_string()),
+            _ => {}
+        }
+        if word != None { self.nowon += 1; return word; }
+        return None
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::Lexer;
-    use super::super::token::{Token, Tag};
+    use super::super::token::Token;
 
     #[test]
     fn lexer_simple_test() {
@@ -137,9 +185,10 @@ abcde efghj klmno pqrst uvwxy z
 123 456 789 012
 1.23456789 0.00123456
 < > <= >= != == true false
+10>=20 30<=40 1<2 3>0 abc!=def
         ".to_string();
 
-        let mut lexer = gen_lexer(program);
+        let mut lexer = Lexer::new(program);
         loop {
             if let Some(token) = lexer.scan() {
                 match token {
@@ -151,18 +200,5 @@ abcde efghj klmno pqrst uvwxy z
                 break;
             }
         }
-    }
-
-    fn gen_lexer(program: String) -> Lexer {
-        let mut lexer = Lexer::new(program);
-        lexer.reserve(Token::new_word(Tag::True, "true"));
-        lexer.reserve(Token::new_word(Tag::False, "false"));
-        lexer.reserve(Token::new_word(Tag::Equal, "=="));
-        lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
-        lexer.reserve(Token::new_word(Tag::UpperThanL, "<"));
-        lexer.reserve(Token::new_word(Tag::UpperThanR, ">"));
-        lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<="));
-        lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">="));
-        lexer
     }
 }
