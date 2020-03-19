@@ -75,11 +75,19 @@ impl SymbolTable {
     /// - target: String => 要素名
     ///
     /// # returns
-    /// Symbol
+    /// Option<Symbol>
     pub fn search(&self, target: String) -> Option<Symbol>{
         Self::search_table(&target, self)
     }
 
+    /// searchから呼ばれて、再帰的に要素を検索する
+    ///
+    /// # params
+    /// target: &String => 要素名
+    /// symboltable: &SymbolTable => 検索対象の記号表
+    ///
+    /// # returns
+    /// Option<Symbol>
     fn search_table(target: &String, symboltable: &SymbolTable) -> Option<Symbol> {
         match symboltable.table.get(target) {
             Some(symbol) => Some(symbol.clone()),
