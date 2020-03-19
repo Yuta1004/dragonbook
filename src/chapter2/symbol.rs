@@ -108,20 +108,25 @@ mod tests {
     #[test]
     fn symboltable_simple_test() {
         let table_a = SymbolTable::new();
-        let mut table_b  = SymbolTable::new_with_table(table_a);
 
-        table_b.add(
-            Symbol::new("a".to_string(), Type::new_i32())
-        );
-        table_b.add(
-            Symbol::new("b".to_string(), Type::new_f32())
-        );
+        let mut table_b = SymbolTable::new_with_table(table_a);
+        table_b.add(Symbol::new("a".to_string(), Type::new_i32()));
+        table_b.add(Symbol::new("b".to_string(), Type::new_f32()));
 
-        for tag in vec!["a", "b"] {
-            match table_b.search(tag.to_string()) {
-                Some(Symbol { lexeme, ty: _ }) if lexeme == tag => {},
-                _ => panic!("test failed at [symboltable_simple_test]")
-            }
+        let mut table_c = SymbolTable::new_with_table(table_b);
+        table_c.add(Symbol::new("c".to_string(), Type::new_i32()));
+        table_c.add(Symbol::new("d".to_string(), Type::new_f32()));
+
+        validate_symbol(table_c.search("a".to_string()), "a", Type::new_i32());
+        validate_symbol(table_c.search("b".to_string()), "b", Type::new_f32());
+        validate_symbol(table_c.search("c".to_string()), "c", Type::new_i32());
+        validate_symbol(table_c.search("d".to_string()), "d", Type::new_f32());
+    }
+
+    fn validate_symbol(symbol: Option<Symbol>, lexemec: &str, tyc: Type) {
+        match symbol {
+            Some(Symbol { lexeme, ty }) if lexeme == lexemec && ty == tyc => {},
+            _ => panic!("test failed at [symboltable_simple_test] => {}", lexemec)
         }
     }
 }
