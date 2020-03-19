@@ -37,7 +37,34 @@ impl Lexer {
         Self::skip_space(self);
 
         let target = &self.program[self.nowon..];
-        match target[0] {
+        let c = target[0]; let n = target[1];
+        match c {
+            // 記号
+            '<' if n == '=' => {
+                self.nowon += 2;
+                Some(Token::new_word(Tag::UpperEqThanL, "<="))
+            },
+            '>' if n == '=' => {
+                self.nowon += 2;
+                Some(Token::new_word(Tag::UpperEqThanR, ">="))
+            },
+            '=' if n == '=' => {
+                self.nowon += 2;
+                Some(Token::new_word(Tag::Equal, "=="))
+            },
+            '!' if n == '=' => {
+                self.nowon += 2;
+                Some(Token::new_word(Tag::NotEqual, "!="))
+            },
+            '<' => {
+                self.nowon += 1;
+                Some(Token::new_word(Tag::UpperThanL, "<"))
+            },
+            '>' => {
+                self.nowon += 1;
+                Some(Token::new_word(Tag::UpperThanR, "<"))
+            },
+            // 数字
             '0'..='9' => {
                 let num = Self::consume_num(self);
                 if num - (num as i32) as f32 > 0.0 {
@@ -46,7 +73,8 @@ impl Lexer {
                     Some(Token::new_numi32(num as i32))
                 }
             },
-            'A'..='~' | '!'..='/' | ':'..='?' => {
+            // 語
+            'a'..='z' | 'A'..='Z' | '_' => {
                 let word = Self::consume_word(self);
                 match self.match_table.get(&word) {
                     Some(t) => Some(t.clone()),
@@ -57,7 +85,9 @@ impl Lexer {
                     }
                 }
             },
-            '@' => { self.nowon += 1; None }
+            // 未定義文字
+            '@' => { self.nowon += 1; None },
+            _ if target[1] == '@' => { self.nowon += 1; None }
             c => panic!("[FAILED] error at line:{} => {}", self.line, c)
         }
     }
@@ -115,7 +145,7 @@ impl Lexer {
         let mut word = String::new();
         for c in &self.program[nowon..] {
             match c {
-                'A'..='~' | '!'..='/' | ':'..='?' => {
+                'a'..='z' | 'A'..='Z' | '_' => {
                     word.push(*c);
                     self.nowon += 1;
                 }
@@ -139,6 +169,7 @@ abcde efghj klmno pqrst uvwxy z
 123 456 789 012
 1.23456789 0.00123456
 < > <= >= != == true false
+10>=20 30<=40 1<2 3>0 abc!=def
         ".to_string();
 
         let mut lexer = gen_lexer(program);
@@ -159,12 +190,6 @@ abcde efghj klmno pqrst uvwxy z
         let mut lexer = Lexer::new(program);
         lexer.reserve(Token::new_word(Tag::True, "true"));
         lexer.reserve(Token::new_word(Tag::False, "false"));
-        lexer.reserve(Token::new_word(Tag::Equal, "=="));
-        lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
-        lexer.reserve(Token::new_word(Tag::UpperThanL, "<"));
-        lexer.reserve(Token::new_word(Tag::UpperThanR, ">"));
-        lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<="));
-        lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">="));
         lexer
     }
 }
