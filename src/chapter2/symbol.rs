@@ -46,8 +46,8 @@ impl SymbolTable {
     ///
     /// # returns
     /// - Box<Option<SymbolTable>>
-    pub fn new() -> Box<Option<SymbolTable>> {
-        Self::new_with_table(Box::new(None))
+    pub fn new() -> SymbolTable {
+        SymbolTable { prev: Box::new(None), table: HashMap::new( )}
     }
 
     /// 親を持った記号表を生成する
@@ -57,12 +57,8 @@ impl SymbolTable {
     ///
     /// # return
     /// - Box<Option<SymbolTable>>
-    pub fn new_with_table(prev: Box<Option<SymbolTable>>) -> Box<Option<SymbolTable>> {
-        Box::new(
-            Some(
-                SymbolTable { prev, table: HashMap::new() }
-            )
-        )
+    pub fn new_with_table(prev: SymbolTable) -> SymbolTable {
+        SymbolTable { prev: Box::new(Some(prev)), table: HashMap::new() }
     }
 
     /// 記号表に要素を追加する
@@ -89,9 +85,9 @@ mod tests {
     #[test]
     fn symboltable_simple_test() {
         let table_a = SymbolTable::new();
-        let table_b  = SymbolTable::new_with_table(table_a);
+        let mut table_b  = SymbolTable::new_with_table(table_a);
 
         let symbol = Symbol::new("a".to_string(), Type::new_i32());
-        table_b.unwrap().add(symbol);
+        table_b.add(symbol);
     }
 }
