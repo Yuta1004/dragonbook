@@ -13,6 +13,10 @@ impl DefParser {
     pub fn new(lexer: Lexer) -> DefParser {
         DefParser { lexer, symboltable: SymbolTable::new() }
     }
+
+    pub fn new_with_symboltable(lexer: Lexer, symboltable: SymbolTable) -> DefParser {
+        DefParser { lexer, symboltable }
+    }
 }
 
 #[cfg(test)]
