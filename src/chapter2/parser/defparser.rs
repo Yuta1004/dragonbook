@@ -42,15 +42,13 @@ impl DefParser {
     /// factor: 構文の最小単位
     /// 記号表をチェックして登録済みのIDなら出力
     fn factor(&mut self) {
-        if let Some(token) = self.lexer.scan() {
-            if let Token::Word { tag, lexeme } = token {
-                match self.symboltable.search(lexeme.clone()) {
-                    Some(symbol) if tag == Tag::Id => println!("{}:{}", symbol.lexeme, symbol.ty),
-                    _ =>                              panic!("undefined symbol => {}", lexeme)
-                }
-            } else {
-                panic!("excepted Token::Word");
+        if let Ok(Token::Word { tag: _, lexeme }) = Self::except(self, Tag::Id) {
+            match self.symboltable.search(lexeme.clone()) {
+                Some(symbol) => println!("{}:{}", symbol.lexeme, symbol.ty),
+                _ =>            panic!("undefined symbol => {}", lexeme)
             }
+        } else {
+            panic!("excepted => Token::Word (Tag: Token::Id)");
         }
     }
 
