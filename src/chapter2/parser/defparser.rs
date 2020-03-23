@@ -53,6 +53,27 @@ impl DefParser {
             }
         }
     }
+
+    /// 次に続くトークンのタグを指定して取り出す
+    /// 要求と異なる場合はErrを返す
+    ///
+    /// # params
+    /// etag: Tag => 要求するタグ
+    ///
+    /// # return
+    /// Result<Token, ()>
+    fn except(&mut self, etag: Tag) -> Result<Token, ()> {
+        if let Some(token) = self.lexer.scan() {
+            match token {
+                Token::Word { tag, lexeme } if tag == etag => {
+                    Ok(Token::new_word(tag, &lexeme))
+                },
+                _ => Err(())
+            }
+        } else {
+            Err(())
+        }
+    }
 }
 
 #[cfg(test)]
