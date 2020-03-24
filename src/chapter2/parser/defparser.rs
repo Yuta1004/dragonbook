@@ -1,5 +1,6 @@
 use super::Parser;
 use super::super::lexer::Lexer;
+use super::super::mtype::Type;
 use super::super::token::{Token, Tag};
 use super::super::symbol::{Symbol, SymbolTable};
 
@@ -39,6 +40,28 @@ impl DefParser {
         DefParser { lexer, symboltable }
     }
 
+    /// decl: 定義文
+    /// 記号表への登録を行う
+    fn decl(&mut self) {
+        let type_t = Self::except(self, Tag::Type);
+        let id_t = Self::except(self, Tag::Id);
+        if let Ok(Token::Word { tag: _, lexeme }) = type_t {
+            let ty = match &lexeme[..] {
+                "i32" => Type::new_i32(),
+                "f32" => Type::new_f32(),
+                "char" => Type::new_char(),
+                _ => Type::new_i32()    // ここに来ることは絶対無いけど...
+            };
+            if let Ok(Token::Word { tag: _, lexeme }) = id_t {
+                self.symboltable.add(Symbol::new(lexeme, ty));
+            } else {
+                panic!("decl: excepted => <Id>");
+            }
+        } else {
+            panic!("decl: excepted => <Type>");
+        }
+    }
+
     /// factor: 構文の最小単位
     /// 記号表をチェックして登録済みのIDなら出力
     fn factor(&mut self) {
@@ -48,7 +71,7 @@ impl DefParser {
                 _ =>            panic!("factor: undefined symbol => {}", lexeme)
             }
         } else {
-            panic!("factor: excepted => Token::Word (Tag: Token::Id)");
+            panic!("factor: excepted => <Id>");
         }
     }
 
