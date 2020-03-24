@@ -24,17 +24,17 @@ impl Lexer {
             program: (program+"@").chars().collect::<Vec<char>>(),
             match_table: HashMap::new()
         };
-        lexer.reserve(Token::new_word(Tag::True, "true"));
-        lexer.reserve(Token::new_word(Tag::False, "false"));
-        lexer.reserve(Token::new_word(Tag::UpperThanL, "<"));
-        lexer.reserve(Token::new_word(Tag::UpperThanR, ">"));
-        lexer.reserve(Token::new_word(Tag::UpperEqThanL, "<="));
-        lexer.reserve(Token::new_word(Tag::UpperEqThanR, ">="));
-        lexer.reserve(Token::new_word(Tag::Equal, "=="));
-        lexer.reserve(Token::new_word(Tag::NotEqual, "!="));
-        lexer.reserve(Token::new_word(Tag::SBrackets, "{"));
-        lexer.reserve(Token::new_word(Tag::GBrackets, "}"));
-        lexer.reserve(Token::new_word(Tag::SemiColon, ";"));
+        lexer.reserve(Token::new_word(Tag::Primary, "true"));
+        lexer.reserve(Token::new_word(Tag::Primary, "false"));
+        lexer.reserve(Token::new_word(Tag::Comparison, "<"));
+        lexer.reserve(Token::new_word(Tag::Comparison, ">"));
+        lexer.reserve(Token::new_word(Tag::Comparison, "<="));
+        lexer.reserve(Token::new_word(Tag::Comparison, ">="));
+        lexer.reserve(Token::new_word(Tag::Comparison, "=="));
+        lexer.reserve(Token::new_word(Tag::Comparison, "!="));
+        lexer.reserve(Token::new_word(Tag::Symbol, "{"));
+        lexer.reserve(Token::new_word(Tag::Symbol, "}"));
+        lexer.reserve(Token::new_word(Tag::Symbol, ";"));
         lexer
     }
 

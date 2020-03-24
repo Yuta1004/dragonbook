@@ -1,7 +1,5 @@
 use std::fmt;
 
-use super::token::Tag;
-
 /// 型を管理する列挙体
 ///
 /// # members
@@ -14,9 +12,9 @@ use super::token::Tag;
 /// - Clone
 #[derive(PartialEq, Clone)]
 pub enum Type {
-    I32 { tag: Tag, size: usize },
-    F32 { tag: Tag, size: usize },
-    Char { tag: Tag, size: usize },
+    I32 (usize),
+    F32 (usize),
+    Char (usize),
 }
 
 impl Type {
@@ -25,7 +23,7 @@ impl Type {
     /// # returns
     /// - Type
     pub fn new_i32() -> Type {
-        Type::I32 { tag: Tag::I32, size: 4 }
+        Type::I32(4)
     }
 
     /// Type::F32構造体を生成して返す
@@ -33,7 +31,7 @@ impl Type {
     /// # returns
     /// - Type
     pub fn new_f32() -> Type {
-        Type::F32 { tag: Tag::F32, size: 4 }
+        Type::F32(4)
     }
 
     /// Type::Char構造体を生成して返す
@@ -41,7 +39,7 @@ impl Type {
     /// # returns
     /// - Type
     pub fn new_char() -> Type {
-        Type::Char { tag: Tag::Char, size: 1 }
+        Type::Char(1)
     }
 }
 
@@ -49,9 +47,9 @@ impl Type {
 impl fmt::Display for Type {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Type::I32 { tag: _, size: _ } => write!(f, "i32"),
-            Type::F32 { tag: _, size: _ } => write!(f, "f32"),
-            Type::Char { tag: _, size: _ } => write!(f, "char")
+            Type::I32 (_) => write!(f, "i32"),
+            Type::F32 (_) => write!(f, "f32"),
+            Type::Char (_) => write!(f, "char")
         }
     }
 }

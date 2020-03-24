@@ -8,26 +8,12 @@ use std::str::FromStr;
 /// - PartialEQ
 #[derive(Clone, PartialEq)]
 pub enum Tag {
-    // 比較演算子
-    True,
-    False,
-    Equal,
-    NotEqual,
-    UpperThanL,
-    UpperThanR,
-    UpperEqThanL,
-    UpperEqThanR,
-    // 型
-    I32,
-    F32,
-    Char,
-    // 記号
-    SBrackets,
-    GBrackets,
-    SemiColon,
-    // その他
-    Id,
-    None
+    Comparison,     // 比較演算子
+    Type,           // 型
+    Symbol,         // 記号
+    Id,             // 語
+    Primary,        // 値
+    None,           // その他、特にタグづけする必要がないものに使う
 }
 
 /// Token
