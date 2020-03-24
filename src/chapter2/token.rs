@@ -1,3 +1,4 @@
+use std::fmt;
 use std::clone::Clone;
 use std::str::FromStr;
 
@@ -8,12 +9,25 @@ use std::str::FromStr;
 /// - PartialEQ
 #[derive(Clone, PartialEq)]
 pub enum Tag {
-    Comparison,     // 比較演算子
+    Id,             // 語
     Type,           // 型
     Symbol,         // 記号
-    Id,             // 語
     Primary,        // 値
+    Comparison,     // 比較演算子
     None,           // その他、特にタグづけする必要がないものに使う
+}
+
+impl fmt::Display for Tag {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Tag::Id => write!(f, "Id"),
+            Tag::Type => write!(f, "Type"),
+            Tag::Symbol => write!(f, "Symbol"),
+            Tag::Primary => write!(f, "Primary"),
+            Tag::Comparison => write!(f, "Comparison"),
+            Tag::None => write!(f, "None")
+        }
+    }
 }
 
 /// Token
