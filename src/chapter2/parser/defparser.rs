@@ -83,16 +83,16 @@ impl DefParser {
     ///
     /// # return
     /// Result<Token, ()>
-    fn except(&mut self, etag: Tag) -> Result<Token, ()> {
+    fn except(&mut self, etag: Tag) -> Result<Token, String> {
         if let Some(token) = self.lexer.scan() {
             match token {
                 Token::Word { tag, lexeme } if tag == etag => {
                     Ok(Token::new_word(tag, &lexeme))
                 },
-                _ => Err(())
+                _ => Err(format!("excepted => <{}>", etag))
             }
         } else {
-            Err(())
+            Err(format!("notice => eof"))
         }
     }
 }
