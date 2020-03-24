@@ -42,37 +42,34 @@ impl DefParser {
 
     /// decl: 定義文
     /// 記号表への登録を行う
-    fn decl(&mut self) {
-        let type_t = Self::except(self, Tag::Type);
-        let id_t = Self::except(self, Tag::Id);
-        if let Ok(Token::Word { tag: _, lexeme }) = type_t {
+    fn decl(&mut self) -> Result<(), String> {
+        let type_t = Self::except(self, Tag::Type)?;
+        let id_t = Self::except(self, Tag::Id)?;
+        if let Token::Word { tag: _, lexeme } = type_t {
             let ty = match &lexeme[..] {
                 "i32" => Type::new_i32(),
                 "f32" => Type::new_f32(),
                 "char" => Type::new_char(),
                 _ => Type::new_i32()    // ここに来ることは絶対無いけど...
             };
-            if let Ok(Token::Word { tag: _, lexeme }) = id_t {
+            if let Token::Word { tag: _, lexeme } = id_t {
                 self.symboltable.add(Symbol::new(lexeme, ty));
-            } else {
-                panic!("decl: excepted => <Id>");
             }
-        } else {
-            panic!("decl: excepted => <Type>");
         }
+        Ok(())
     }
 
     /// factor: 構文の最小単位
     /// 記号表をチェックして登録済みのIDなら出力
-    fn factor(&mut self) {
-        if let Ok(Token::Word { tag: _, lexeme }) = Self::except(self, Tag::Id) {
+    fn factor(&mut self) -> Result<(), String> {
+        let token = Self::except(self, Tag::Id)?;
+        if let Token::Word { tag: _, lexeme } = token {
             match self.symboltable.search(lexeme.clone()) {
                 Some(symbol) => print!("{}:{}", symbol.lexeme, symbol.ty),
                 _ =>            panic!("factor: undefined symbol => {}", lexeme)
             }
-        } else {
-            panic!("factor: excepted => <Id>");
         }
+        Ok(())
     }
 
     /// 次に続くトークンのタグを指定して取り出す
@@ -118,11 +115,11 @@ mod tests {
         lexer.reserve(Token::new_word(Tag::Type, "char"));
 
         let mut parser = DefParser::new(lexer);
-        parser.decl();
-        parser.decl();
-        parser.decl();
-        parser.factor();
-        parser.factor();
-        parser.factor();
+        for _ in 0..=2 {
+            let _ = parser.decl();
+        }
+        for _ in 0..=2 {
+            let _ = parser.factor();
+        }
     }
 }
