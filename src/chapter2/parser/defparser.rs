@@ -44,11 +44,11 @@ impl DefParser {
     fn factor(&mut self) {
         if let Ok(Token::Word { tag: _, lexeme }) = Self::except(self, Tag::Id) {
             match self.symboltable.search(lexeme.clone()) {
-                Some(symbol) => println!("{}:{}", symbol.lexeme, symbol.ty),
-                _ =>            panic!("undefined symbol => {}", lexeme)
+                Some(symbol) => print!("{}:{}", symbol.lexeme, symbol.ty),
+                _ =>            panic!("factor: undefined symbol => {}", lexeme)
             }
         } else {
-            panic!("excepted => Token::Word (Tag: Token::Id)");
+            panic!("factor: excepted => Token::Word (Tag: Token::Id)");
         }
     }
 
