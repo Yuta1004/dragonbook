@@ -36,6 +36,7 @@ impl Symbol {
 /// # members
 /// - prev: Box<SymbolTable> => 上位に位置する記号表をもつ
 /// - table: String, Symbolの照合表
+#[derive(Clone)]
 pub struct SymbolTable {
     prev: Box<Option<SymbolTable>>,
     table: HashMap<String, Symbol>
