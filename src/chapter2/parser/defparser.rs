@@ -118,7 +118,7 @@ impl DefParser {
     fn factor(&mut self, id_t: Token) {
         if let Token::Word { tag: _, lexeme } = id_t {
             match self.table.search(lexeme.clone()) {
-                Some(symbol) => print!("{}:{}", symbol.lexeme, symbol.ty),
+                Some(symbol) => print!(" {}:{} ", symbol.lexeme, symbol.ty),
                 _ =>            panic!("factor: undefined symbol => {}", lexeme)
             }
         }
