@@ -41,6 +41,9 @@ impl DefParser {
     }
 
     /// block: ブロック
+    ///
+    /// # returns
+    /// Result<(), String>
     fn block(&mut self) -> Result<(), String> {
         for cnt in 0..=1 {
             let block_s = Self::except(self, Tag::Symbol)?;
