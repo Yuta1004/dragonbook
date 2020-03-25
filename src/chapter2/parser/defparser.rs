@@ -40,6 +40,24 @@ impl DefParser {
         DefParser { lexer, symboltable }
     }
 
+    /// block: ブロック
+    fn block(&mut self) -> Result<(), String> {
+        for cnt in 0..=1 {
+            let block_s = Self::except(self, Tag::Symbol)?;
+            if let Token::Word { tag: _, lexeme } = block_s {
+                if cnt == 0 && lexeme == "{" {
+                    self.symboltable = SymbolTable::new_with_table(self.symboltable.clone());
+                    Self::stmts(self);
+                } else if cnt == 1 && lexeme == "}" {
+                    self.symboltable = self.symboltable.clone().release().unwrap();
+                } else {
+                    panic!("block undefined/unclosed!!");
+                }
+            }
+        }
+        Ok(())
+    }
+
     /// stmts: 文の集合
     ///
     /// # returns
@@ -140,11 +158,11 @@ mod tests {
 
     #[test]
     fn def_parser_decl_factor_test() {
-        let mut lexer = Lexer::new("i32 a f32 b char c a b c".to_string());
+        let mut lexer = Lexer::new("{ i32 a f32 b char c a b c }".to_string());
         lexer.reserve(Token::new_word(Tag::Type, "i32"));
         lexer.reserve(Token::new_word(Tag::Type, "f32"));
         lexer.reserve(Token::new_word(Tag::Type, "char"));
         let mut parser = DefParser::new(lexer);
-        parser.stmts();
+        let _ = parser.block();
     }
 }
