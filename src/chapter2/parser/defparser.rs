@@ -34,12 +34,13 @@ impl DefParser {
     /// # returns
     /// Result<(), String>
     fn block(&mut self) -> Result<(), String> {
+        let mut ret_result = Ok(());
         for cnt in 0..=1 {
             let block_s = Self::except(self, Tag::Symbol)?;
             if let Token::Word { tag: _, lexeme } = block_s {
                 if cnt == 0 && lexeme == "{" {
                     self.table = SymbolTable::new_with_table(self.table.clone());
-                    Self::stmts(self);
+                    ret_result = Self::stmts(self);
                 } else if cnt == 1 && lexeme == "}" {
                     self.table = self.table.clone().release().unwrap();
                 } else {
@@ -47,19 +48,18 @@ impl DefParser {
                 }
             }
         }
-        Ok(())
+        return ret_result;
     }
 
     /// stmts: 文の集合
     ///
     /// # returns
     /// Result<(), String>
-    fn stmts(&mut self) {
+    fn stmts(&mut self) -> Result<(), String> {
         loop {
             match Self::stmt(self) {
                 Ok(_) => continue,
-                Err(msg) if msg != "eof" => panic!(msg),
-                _ => break
+                Err(msg) => return Err(msg),
             }
         }
     }
