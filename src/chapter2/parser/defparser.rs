@@ -29,6 +29,17 @@ impl DefParser {
         DefParser { lexer, table }
     }
 
+    /// blocks: ブロックの集合
+    fn blocks(&mut self) {
+        loop {
+            match Self::block(self) {
+                Ok(_) => continue,
+                Err(msg) if msg != "eof" => panic!(msg),
+                _ => break
+            }
+        }
+    }
+
     /// block: ブロック
     ///
     /// # returns
@@ -44,7 +55,7 @@ impl DefParser {
                 } else if cnt == 1 && lexeme == "}" {
                     self.table = self.table.clone().release().unwrap();
                 } else {
-                    panic!("block undefined/unclosed!!");
+                    return Err("block undefined/unclosed!!".to_string());
                 }
             }
         }
@@ -130,7 +141,7 @@ impl DefParser {
                 _ => Err(format!("excepted => <{}>", etag))
             }
         } else {
-            Err(format!("notice => eof"))
+            Err(format!("eof"))
         }
     }
 }
@@ -158,6 +169,6 @@ mod tests {
         lexer.reserve(Token::new_word(Tag::Type, "f32"));
         lexer.reserve(Token::new_word(Tag::Type, "char"));
         let mut parser = DefParser::new(lexer, table);
-        let _ = parser.block();
+        parser.blocks();
     }
 }
