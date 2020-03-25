@@ -40,6 +40,29 @@ impl DefParser {
         DefParser { lexer, symboltable }
     }
 
+    /// stmts: 文の集合
+    ///
+    /// # returns
+    /// Result<(), String>
+    fn stmts(&mut self) -> Result<(), String> {
+        loop {
+            let token = self.lexer.scan();
+            if let Some(Token::Word { tag, lexeme: _ }) = token.clone() {
+                match tag {
+                    Tag::Type => {
+                        let id_t = Self::except(self, Tag::Id)?;
+                        Self::decl(self, token.unwrap(), id_t);
+                    },
+                    Tag::Id => Self::factor(self, token.unwrap()),
+                    _ => return Err(format!("unexcepted => {}", tag))
+                }
+            } else {
+                break
+            }
+        }
+        Ok(())
+    }
+
     /// decl: 定義文
     /// 記号表への登録を行う
     ///
@@ -115,6 +138,7 @@ mod tests {
         lexer.reserve(Token::new_word(Tag::Type, "i32"));
         lexer.reserve(Token::new_word(Tag::Type, "f32"));
         lexer.reserve(Token::new_word(Tag::Type, "char"));
-        let _ = DefParser::new(lexer);
+        let mut parser = DefParser::new(lexer);
+        let _ = parser.stmts();
     }
 }
