@@ -81,7 +81,7 @@ impl DefParser {
                     Self::decl(self, token, id_t);
                 },
                 Tag::Id => Self::factor(self, token),
-                _ => return Err(format!("unexcepted => {}", tag))
+                _ => {}
             }
         }
         Ok(())
