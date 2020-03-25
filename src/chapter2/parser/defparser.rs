@@ -44,21 +44,27 @@ impl DefParser {
     ///
     /// # returns
     /// Result<(), String>
-    fn stmts(&mut self) -> Result<(), String> {
+    fn stmts(&mut self) {
         loop {
-            let token = self.lexer.scan().ok_or("eof".to_string())?;
-            if let Token::Word { tag, lexeme: _ } = token.clone() {
-                match tag {
-                    Tag::Type => {
-                        let id_t = Self::except(self, Tag::Id)?;
-                        Self::decl(self, token, id_t);
-                    },
-                    Tag::Id => Self::factor(self, token),
-                    _ => return Err(format!("unexcepted => {}", tag))
-                }
-                continue
+            match Self::stmt(self) {
+                Ok(_) => continue,
+                Err(msg) if msg != "eof" => panic!(msg),
+                _ => break
             }
-            break
+        }
+    }
+
+    fn stmt(&mut self) -> Result<(), String> {
+        let token = self.lexer.scan().ok_or("eof".to_string())?;
+        if let Token::Word { tag, lexeme: _ } = token.clone() {
+            match tag {
+                Tag::Type => {
+                    let id_t = Self::except(self, Tag::Id)?;
+                    Self::decl(self, token, id_t);
+                },
+                Tag::Id => Self::factor(self, token),
+                _ => return Err(format!("unexcepted => {}", tag))
+            }
         }
         Ok(())
     }
@@ -139,6 +145,6 @@ mod tests {
         lexer.reserve(Token::new_word(Tag::Type, "f32"));
         lexer.reserve(Token::new_word(Tag::Type, "char"));
         let mut parser = DefParser::new(lexer);
-        let _ = parser.stmts();
+        parser.stmts();
     }
 }
