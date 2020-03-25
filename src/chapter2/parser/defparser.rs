@@ -11,7 +11,7 @@ use super::super::symbol::{Symbol, SymbolTable};
 /// - symboltable: SymbolTable => 記号表
 struct DefParser {
     lexer: Lexer,
-    symboltable: SymbolTable
+    table: SymbolTable
 }
 
 impl Parser for DefParser {}
@@ -21,23 +21,12 @@ impl DefParser {
     ///
     /// # params
     /// - lexer: Lexer => パースしたいプログラムで初期化された字句解析器
+    /// - table: SymbolTable => 初期化する記号表
     ///
     /// # returns
     /// DefParser
-    fn new(lexer: Lexer) -> DefParser {
-        DefParser { lexer, symboltable: SymbolTable::new() }
-    }
-
-    /// DefParserを生成して返す(+記号表セット)
-    ///
-    /// # params
-    /// - lexer: Lexer => パースしたいプログラムで初期化された字句解析器
-    /// - symboltable: SymbolTable => セットする記号表
-    ///
-    /// # returns
-    /// DefParser
-    pub fn new_with_symboltable(lexer: Lexer, symboltable: SymbolTable) -> DefParser {
-        DefParser { lexer, symboltable }
+    fn new(lexer: Lexer, table: SymbolTable) -> DefParser {
+        DefParser { lexer, table }
     }
 
     /// block: ブロック
@@ -49,10 +38,10 @@ impl DefParser {
             let block_s = Self::except(self, Tag::Symbol)?;
             if let Token::Word { tag: _, lexeme } = block_s {
                 if cnt == 0 && lexeme == "{" {
-                    self.symboltable = SymbolTable::new_with_table(self.symboltable.clone());
+                    self.table = SymbolTable::new_with_table(self.table.clone());
                     Self::stmts(self);
                 } else if cnt == 1 && lexeme == "}" {
-                    self.symboltable = self.symboltable.clone().release().unwrap();
+                    self.table = self.table.clone().release().unwrap();
                 } else {
                     panic!("block undefined/unclosed!!");
                 }
@@ -105,7 +94,7 @@ impl DefParser {
                 _ => Type::new_i32()    // ここに来ることは絶対無いけど...
             };
             if let Token::Word { tag: _, lexeme } = id_t {
-                self.symboltable.add(Symbol::new(lexeme, ty));
+                self.table.add(Symbol::new(lexeme, ty));
             }
         }
     }
@@ -117,7 +106,7 @@ impl DefParser {
     /// - id_t: Token => Tag::IdであるToken
     fn factor(&mut self, id_t: Token) {
         if let Token::Word { tag: _, lexeme } = id_t {
-            match self.symboltable.search(lexeme.clone()) {
+            match self.table.search(lexeme.clone()) {
                 Some(symbol) => print!("{}:{}", symbol.lexeme, symbol.ty),
                 _ =>            panic!("factor: undefined symbol => {}", lexeme)
             }
@@ -150,22 +139,25 @@ impl DefParser {
 mod tests {
     use super::DefParser;
     use super::super::super::lexer::Lexer;
+    use super::super::super::symbol::SymbolTable;
     use super::super::super::token::{Tag, Token};
 
     #[test]
     fn defparser_simple_test() {
         let program = "{ i32 x; i32 y; { f32 x; x; y; } x; y; }".to_string();
+        let table = SymbolTable::new();
         let lexer = Lexer::new(program);
-        let _ = DefParser::new(lexer);
+        let _ = DefParser::new(lexer, table);
     }
 
     #[test]
-    fn def_parser_decl_factor_test() {
+    fn defparser_parse_test() {
+        let table = SymbolTable::new();
         let mut lexer = Lexer::new("{ i32 a f32 b char c a b c }".to_string());
         lexer.reserve(Token::new_word(Tag::Type, "i32"));
         lexer.reserve(Token::new_word(Tag::Type, "f32"));
         lexer.reserve(Token::new_word(Tag::Type, "char"));
-        let mut parser = DefParser::new(lexer);
+        let mut parser = DefParser::new(lexer, table);
         let _ = parser.block();
     }
 }
