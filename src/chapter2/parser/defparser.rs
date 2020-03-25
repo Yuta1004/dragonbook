@@ -46,19 +46,19 @@ impl DefParser {
     /// Result<(), String>
     fn stmts(&mut self) -> Result<(), String> {
         loop {
-            let token = self.lexer.scan();
-            if let Some(Token::Word { tag, lexeme: _ }) = token.clone() {
+            let token = self.lexer.scan().ok_or("eof".to_string())?;
+            if let Token::Word { tag, lexeme: _ } = token.clone() {
                 match tag {
                     Tag::Type => {
                         let id_t = Self::except(self, Tag::Id)?;
-                        Self::decl(self, token.unwrap(), id_t);
+                        Self::decl(self, token, id_t);
                     },
-                    Tag::Id => Self::factor(self, token.unwrap()),
+                    Tag::Id => Self::factor(self, token),
                     _ => return Err(format!("unexcepted => {}", tag))
                 }
-            } else {
-                break
+                continue
             }
+            break
         }
         Ok(())
     }
