@@ -42,10 +42,12 @@ impl DefParser {
 
     /// decl: 定義文
     /// 記号表への登録を行う
-    fn decl(&mut self) -> Result<(), String> {
-        let type_t = Self::except(self, Tag::Type)?;
-        let id_t = Self::except(self, Tag::Id)?;
-        if let Token::Word { tag: _, lexeme } = type_t {
+    ///
+    /// # params
+    /// - ty_t: Token => Tag::TypeであるToken
+    /// - id_t: Token => Tag::IdであるToken
+    fn decl(&mut self, ty_t: Token, id_t: Token) {
+        if let Token::Word { tag: _, lexeme } = ty_t {
             let ty = match &lexeme[..] {
                 "i32" => Type::new_i32(),
                 "f32" => Type::new_f32(),
@@ -56,20 +58,20 @@ impl DefParser {
                 self.symboltable.add(Symbol::new(lexeme, ty));
             }
         }
-        Ok(())
     }
 
     /// factor: 構文の最小単位
     /// 記号表をチェックして登録済みのIDなら出力
-    fn factor(&mut self) -> Result<(), String> {
-        let token = Self::except(self, Tag::Id)?;
-        if let Token::Word { tag: _, lexeme } = token {
+    ///
+    /// # params
+    /// - id_t: Token => Tag::IdであるToken
+    fn factor(&mut self, id_t: Token) {
+        if let Token::Word { tag: _, lexeme } = id_t {
             match self.symboltable.search(lexeme.clone()) {
                 Some(symbol) => print!("{}:{}", symbol.lexeme, symbol.ty),
                 _ =>            panic!("factor: undefined symbol => {}", lexeme)
             }
         }
-        Ok(())
     }
 
     /// 次に続くトークンのタグを指定して取り出す
@@ -113,13 +115,6 @@ mod tests {
         lexer.reserve(Token::new_word(Tag::Type, "i32"));
         lexer.reserve(Token::new_word(Tag::Type, "f32"));
         lexer.reserve(Token::new_word(Tag::Type, "char"));
-
-        let mut parser = DefParser::new(lexer);
-        for _ in 0..=2 {
-            let _ = parser.decl();
-        }
-        for _ in 0..=2 {
-            let _ = parser.factor();
-        }
+        let _ = DefParser::new(lexer);
     }
 }
