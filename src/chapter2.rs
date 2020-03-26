@@ -1,7 +1,7 @@
 pub mod parser {
     trait Parser {}
     pub mod infix2suffix;
-    pub mod defparser;
+    mod defparser;          // dead_code
 }
 pub mod lexer;
 pub mod token;

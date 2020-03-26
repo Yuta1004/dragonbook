@@ -9,13 +9,16 @@ use super::super::symbol::{Symbol, SymbolTable};
 /// # members
 /// - lexer: Lexer => 字句解析器
 /// - symboltable: SymbolTable => 記号表
+#[allow(dead_code)]
 struct DefParser {
     lexer: Lexer,
     table: SymbolTable
 }
 
+#[allow(dead_code)]
 impl Parser for DefParser {}
 
+#[allow(dead_code)]
 impl DefParser {
     /// DefParserを生成して返す
     ///
