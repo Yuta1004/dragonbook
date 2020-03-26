@@ -3,7 +3,7 @@ use super::super::mtype::Type;
 use super::super::token::{Token, Tag};
 use super::super::symbol::{Symbol, SymbolTable};
 
-/// 定義と使用からなるプログラムをパースする
+/// 定義と使用からなるプログラムをパースする(未完成/失敗作)
 ///
 /// # members
 /// - lexer: Lexer => 字句解析器

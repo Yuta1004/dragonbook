@@ -1,6 +1,6 @@
 pub mod parser {
     pub mod infix2suffix;
-    mod defparser;          // dead_code
+    mod _defparser;          // dead_code
 }
 pub mod lexer;
 pub mod token;
