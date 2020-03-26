@@ -1,4 +1,3 @@
-use super::Parser;
 use super::super::lexer::Lexer;
 use super::super::mtype::Type;
 use super::super::token::{Token, Tag};
@@ -14,9 +13,6 @@ struct DefParser {
     lexer: Lexer,
     table: SymbolTable
 }
-
-#[allow(dead_code)]
-impl Parser for DefParser {}
 
 #[allow(dead_code)]
 impl DefParser {

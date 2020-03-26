@@ -1,11 +1,7 @@
-use super::Parser;
-
 pub struct Infix2Suffix {
     expr: String,
     lookidx: i32,
 }
-
-impl Parser for Infix2Suffix {}
 
 impl Infix2Suffix {
     /// Parser構造体を生成して返す
