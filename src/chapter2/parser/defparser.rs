@@ -47,7 +47,7 @@ impl DefParser {
     fn block(&mut self) -> Result<(), String> {
         let mut ret_result = Ok(());
         for cnt in 0..=1 {
-            let block_s = Self::except(self, Tag::Symbol)?;
+            let block_s = Self::expect(self, Tag::Symbol)?;
             if let Token::Word { tag: _, lexeme } = block_s {
                 if cnt == 0 && lexeme == "{" {
                     self.table = SymbolTable::new_with_table(self.table.clone());
@@ -80,7 +80,7 @@ impl DefParser {
         if let Token::Word { tag, lexeme: _ } = token.clone() {
             match tag {
                 Tag::Type => {
-                    let id_t = Self::except(self, Tag::Id)?;
+                    let id_t = Self::expect(self, Tag::Id)?;
                     Self::decl(self, token, id_t);
                 },
                 Tag::Id => Self::factor(self, token),
@@ -132,13 +132,13 @@ impl DefParser {
     ///
     /// # return
     /// Result<Token, ()>
-    fn except(&mut self, etag: Tag) -> Result<Token, String> {
+    fn expect(&mut self, etag: Tag) -> Result<Token, String> {
         if let Some(token) = self.lexer.scan() {
             match token {
                 Token::Word { tag, lexeme } if tag == etag => {
                     Ok(Token::new_word(tag, &lexeme))
                 },
-                _ => Err(format!("excepted => <{}>", etag))
+                _ => Err(format!("expected => <{}>", etag))
             }
         } else {
             Err(format!("eof"))
